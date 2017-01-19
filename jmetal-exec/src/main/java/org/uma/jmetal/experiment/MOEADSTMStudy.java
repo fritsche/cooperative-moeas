@@ -70,10 +70,11 @@ public class MOEADSTMStudy {
     private static final int INDEPENDENT_RUNS = 20;
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            throw new JMetalException("Needed arguments: experimentBaseDirectory");
+        if (args.length != 2) {
+            throw new JMetalException("Needed arguments: experimentBaseDirectory and an integer m");
         }
         String experimentBaseDirectory = args[0];
+        int m = Integer.parseInt(args[1]);
 
         List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
         List<Integer> generationsList = new ArrayList<>();
@@ -82,41 +83,71 @@ public class MOEADSTMStudy {
          * The number of variables are (M+k−1), where M is number of objectives
          * and k = 5 for DTLZ1, while k = 10 for DTLZ2, DTLZ3 and DTLZ4
          */
-        int m, k;
+        int k;
 
-        // 3 objectives
-        m = 3;
-        
+        switch (m) {
+            case 3:
+                generationsList.add(400); // DTLZ1
+                generationsList.add(250); // DTLZ2
+                generationsList.add(1000);// DTLZ3
+                generationsList.add(600); // DTLZ4
+                generationsList.add(400); // WFG6
+                generationsList.add(400); // WFG7
+                break;
+            case 5:
+                generationsList.add(600);
+                generationsList.add(350);
+                generationsList.add(1000);
+                generationsList.add(1000);
+                generationsList.add(750);
+                generationsList.add(750);
+                break;
+            case 8:
+                generationsList.add(750);
+                generationsList.add(500);
+                generationsList.add(1000);
+                generationsList.add(1250);
+                generationsList.add(1500);
+                generationsList.add(1500);
+                break;
+            case 10:
+                generationsList.add(1000);
+                generationsList.add(750);
+                generationsList.add(1500);
+                generationsList.add(2000);
+                generationsList.add(2000);
+                generationsList.add(2000);
+                break;
+            case 15:
+                generationsList.add(1500);
+                generationsList.add(1000);
+                generationsList.add(2000);
+                generationsList.add(3000);
+                generationsList.add(3000);
+                generationsList.add(3000);
+                break;
+        }
+
         k = 5; // k = 5 for DTLZ1
         problemList.add(new ExperimentProblem<>(new DTLZ1(m + k - 1, m)));
-        generationsList.add(400);
 
         k = 10; //  k = 10 for DTLZ2, DTLZ3 and DTLZ4
         problemList.add(new ExperimentProblem<>(new DTLZ2(m + k - 1, m)));
-        generationsList.add(250);
-        
         problemList.add(new ExperimentProblem<>(new DTLZ3(m + k - 1, m)));
-        generationsList.add(1000);
-        
         problemList.add(new ExperimentProblem<>(new DTLZ4(m + k - 1, m)));
-        generationsList.add(600);
-        
+
         /**
-         * from the WFG readme file
-         * l=20 (distance related)
-         * k=4 (position related) if M=2
-         * otherwise k=2*(M-1) 
+         * from the WFG readme file l=20 (distance related) k=4 (position
+         * related) if M=2 otherwise k=2*(M-1)
          */
-        k = 2 * (m-1);
+        k = 2 * (m - 1);
         problemList.add(new ExperimentProblem<>(new WFG6(k, 20, m)));
-        generationsList.add(400);
         problemList.add(new ExperimentProblem<>(new WFG7(k, 20, m)));
-        generationsList.add(400);
 
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList
                 = configureAlgorithmList(problemList, generationsList);
 
-        ExperimentBuilder<DoubleSolution, List<DoubleSolution>> moeadstmStudy = new ExperimentBuilder<>("MOEADSTMStudy"+m+"M");
+        ExperimentBuilder<DoubleSolution, List<DoubleSolution>> moeadstmStudy = new ExperimentBuilder<>("MOEADSTMStudy" + m + "M");
         moeadstmStudy.setAlgorithmList(algorithmList);
         moeadstmStudy.setProblemList(problemList);
         moeadstmStudy.setExperimentBaseDirectory(experimentBaseDirectory);
@@ -246,7 +277,7 @@ public class MOEADSTMStudy {
             algorithm = new MOEADBuilder(problem, MOEADBuilder.Variant.MOEADSTM)
                     .setCrossover(crossover)
                     .setMutation(mutation)
-                    .setMaxEvaluations(generationsList.get(i)*D)
+                    .setMaxEvaluations(generationsList.get(i) * D)
                     .setPopulationSize(D)
                     .setResultPopulationSize(D)
                     .setNeighborhoodSelectionProbability(0.9)
