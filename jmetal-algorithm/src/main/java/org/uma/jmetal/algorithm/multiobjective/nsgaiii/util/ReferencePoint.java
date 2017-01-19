@@ -134,7 +134,7 @@ public class ReferencePoint<S extends Solution<?>> {
             List<ReferencePoint<S>> referencePoints,
             int numberOfObjectives) {
         try {
-            InputStream in = getClass().getResourceAsStream(dataFileName);
+            InputStream in = getClass().getResourceAsStream("/"+dataFileName);
             InputStreamReader isr = new InputStreamReader(in);
             try (BufferedReader br = new BufferedReader(isr)) {
                 int i = 0;
