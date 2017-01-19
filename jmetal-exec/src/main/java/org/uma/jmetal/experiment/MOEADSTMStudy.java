@@ -17,16 +17,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
+import org.uma.jmetal.algorithm.multiobjective.moead.AbstractMOEAD;
+import org.uma.jmetal.algorithm.multiobjective.moead.MOEADBuilder;
 import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIIIBuilder;
-import static org.uma.jmetal.experiment.ZDTStudy2.configureAlgorithmList;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
+import org.uma.jmetal.operator.impl.crossover.DifferentialEvolutionCrossover;
 import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
 import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG6;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG7;
 import org.uma.jmetal.qualityindicator.impl.Epsilon;
 import org.uma.jmetal.qualityindicator.impl.GenerationalDistance;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
@@ -72,29 +79,44 @@ public class MOEADSTMStudy {
         List<Integer> generationsList = new ArrayList<>();
 
         /**
-         * @TODO implement the initialization of the other problems
-         *
          * The number of variables are (M+k−1), where M is number of objectives
          * and k = 5 for DTLZ1, while k = 10 for DTLZ2, DTLZ3 and DTLZ4
          */
         int m, k;
 
-        // DTLZ1 - 3 objectives
+        // 3 objectives
         m = 3;
+        
         k = 5; // k = 5 for DTLZ1
-        problemList.add(new ExperimentProblem<>(new DTLZ1(m + k - 1, m), "DTLZ1M3"));
+        problemList.add(new ExperimentProblem<>(new DTLZ1(m + k - 1, m)));
         generationsList.add(400);
 
-        // DTLZ1 - 5 objectives
-        m = 5;
-        k = 5; // k = 5 for DTLZ1
-        problemList.add(new ExperimentProblem<>(new DTLZ1(m + k - 1, m), "DTLZ1M5"));
+        k = 10; //  k = 10 for DTLZ2, DTLZ3 and DTLZ4
+        problemList.add(new ExperimentProblem<>(new DTLZ2(m + k - 1, m)));
+        generationsList.add(250);
+        
+        problemList.add(new ExperimentProblem<>(new DTLZ3(m + k - 1, m)));
+        generationsList.add(1000);
+        
+        problemList.add(new ExperimentProblem<>(new DTLZ4(m + k - 1, m)));
         generationsList.add(600);
+        
+        /**
+         * from the WFG readme file
+         * l=20 (distance related)
+         * k=4 (position related) if M=2
+         * otherwise k=2*(M-1) 
+         */
+        k = 2 * (m-1);
+        problemList.add(new ExperimentProblem<>(new WFG6(k, 20, m)));
+        generationsList.add(400);
+        problemList.add(new ExperimentProblem<>(new WFG7(k, 20, m)));
+        generationsList.add(400);
 
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList
                 = configureAlgorithmList(problemList, generationsList);
 
-        ExperimentBuilder<DoubleSolution, List<DoubleSolution>> moeadstmStudy = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("MOEADSTMStudy");
+        ExperimentBuilder<DoubleSolution, List<DoubleSolution>> moeadstmStudy = new ExperimentBuilder<>("MOEADSTMStudy"+m+"M");
         moeadstmStudy.setAlgorithmList(algorithmList);
         moeadstmStudy.setProblemList(problemList);
         moeadstmStudy.setExperimentBaseDirectory(experimentBaseDirectory);
@@ -136,10 +158,33 @@ public class MOEADSTMStudy {
          * Configure NSGA-III
          */
         for (int i = 0; i < problemList.size(); i++) {
+
+            Problem<DoubleSolution> problem = problemList.get(i).getProblem();
+
+            int D = 300; // default
+            int m = problem.getNumberOfObjectives();
+
+            switch (m) {
+                case 3:
+                    D = 91;
+                    break;
+                case 5:
+                    D = 210;
+                    break;
+                case 8:
+                    D = 156;
+                    break;
+                case 10:
+                    D = 275;
+                    break;
+                case 15:
+                    D = 135;
+                    break;
+            }
+
             double crossoverProbability = 0.9;
             double crossoverDistributionIndex = 30.0;
             CrossoverOperator<DoubleSolution> crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
-            Problem<DoubleSolution> problem = problemList.get(i).getProblem();
             MutationOperator<DoubleSolution> mutation;
             SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
 
@@ -147,15 +192,72 @@ public class MOEADSTMStudy {
             double mutationDistributionIndex = 20.0;
             mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
 
-            selection = new BinaryTournamentSelection<DoubleSolution>();
+            selection = new BinaryTournamentSelection<>();
 
             Algorithm<List<DoubleSolution>> algorithm = new NSGAIIIBuilder<>(problem)
                     .setCrossoverOperator(crossover)
                     .setMutationOperator(mutation)
                     .setSelectionOperator(selection)
                     .setMaxIterations(generationsList.get(i))
+                    .setUniformWeightFileName("MOEAD_Weights/W" + m + "D_" + D + ".dat")
                     .build();
             algorithms.add(new ExperimentAlgorithm<>(algorithm, problemList.get(i).getTag()));
+        }
+
+        /**
+         * Configure MOEA/D-STM
+         */
+        for (int i = 0; i < problemList.size(); i++) {
+
+            Problem<DoubleSolution> problem = problemList.get(i).getProblem();
+            MutationOperator<DoubleSolution> mutation;
+            DifferentialEvolutionCrossover crossover;
+            Algorithm<List<DoubleSolution>> algorithm;
+
+            int D = 300; // default
+            int m = problem.getNumberOfObjectives();
+
+            switch (m) {
+                case 3:
+                    D = 91;
+                    break;
+                case 5:
+                    D = 210;
+                    break;
+                case 8:
+                    D = 156;
+                    break;
+                case 10:
+                    D = 275;
+                    break;
+                case 15:
+                    D = 135;
+                    break;
+            }
+
+            double cr = 1.0;
+            double f = 0.5;
+            crossover = new DifferentialEvolutionCrossover(cr, f, "rand/1/bin");
+
+            double mutationProbability = 1.0 / problem.getNumberOfVariables();
+            double mutationDistributionIndex = 20.0;
+            mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
+
+            algorithm = new MOEADBuilder(problem, MOEADBuilder.Variant.MOEADSTM)
+                    .setCrossover(crossover)
+                    .setMutation(mutation)
+                    .setMaxEvaluations(generationsList.get(i)*D)
+                    .setPopulationSize(D)
+                    .setResultPopulationSize(D)
+                    .setNeighborhoodSelectionProbability(0.9)
+                    .setMaximumNumberOfReplacedSolutions(2)
+                    .setNeighborSize(20)
+                    .setFunctionType(AbstractMOEAD.FunctionType.TCHE)
+                    .setDataDirectory("MOEAD_Weights")
+                    .build();
+
+            algorithms.add(new ExperimentAlgorithm<>(algorithm, problemList.get(i).getTag()));
+
         }
 
         return algorithms;

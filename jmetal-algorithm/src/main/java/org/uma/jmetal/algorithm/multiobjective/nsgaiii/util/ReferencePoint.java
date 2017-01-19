@@ -155,7 +155,7 @@ public class ReferencePoint<S extends Solution<?>> {
                 }
             }
         } catch (Exception e) {
-            throw new JMetalException("initializeUniformWeight: failed when reading for file: "
+            throw new JMetalException("loadFromFile: failed when reading for file: "
                     + dataFileName, e);
         }
     }
