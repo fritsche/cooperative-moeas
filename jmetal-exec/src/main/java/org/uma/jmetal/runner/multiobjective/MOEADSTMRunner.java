@@ -28,6 +28,7 @@ import org.uma.jmetal.util.ProblemUtils;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1;
 
 /**
  * Class for configuring and running the MOEA/D algorithm
@@ -55,12 +56,12 @@ public class MOEADSTMRunner extends AbstractAlgorithmRunner {
       problemName = args[0] ;
       referenceParetoFront = args[1] ;
     } else {
-      problemName = "org.uma.jmetal.problem.multiobjective.lz09.LZ09F2";
-      referenceParetoFront = "jmetal-problem/src/test/resources/pareto_fronts/LZ09_F2.pf";
+//      problemName = "org.uma.jmetal.problem.multiobjective.lz09.LZ09F2";
+//      referenceParetoFront = "jmetal-problem/src/test/resources/pareto_fronts/LZ09_F2.pf";
     }
 
-    problem = (DoubleProblem)ProblemUtils.<DoubleSolution> loadProblem(problemName);
-
+    // problem = (DoubleProblem)ProblemUtils.<DoubleSolution> loadProblem(problemName);
+    problem = new DTLZ1(100, 3);
     double cr = 1.0 ;
     double f = 0.5 ;
     crossover = new DifferentialEvolutionCrossover(cr, f, "rand/1/bin");
@@ -73,8 +74,8 @@ public class MOEADSTMRunner extends AbstractAlgorithmRunner {
         .setCrossover(crossover)
         .setMutation(mutation)
         .setMaxEvaluations(150000)
-        .setPopulationSize(300)
-        .setResultPopulationSize(300)
+        .setPopulationSize(91)
+        .setResultPopulationSize(91)
         .setNeighborhoodSelectionProbability(0.9)
         .setMaximumNumberOfReplacedSolutions(2)
         .setNeighborSize(20)
