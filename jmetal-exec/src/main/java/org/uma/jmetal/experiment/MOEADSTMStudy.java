@@ -154,10 +154,13 @@ public class MOEADSTMStudy {
         moeadstmStudy.setOutputParetoFrontFileName("FUN");
         moeadstmStudy.setOutputParetoSetFileName("VAR");
         moeadstmStudy.setReferenceFrontDirectory(experimentBaseDirectory + "/referenceFronts");
-        moeadstmStudy.setIndicatorList(Arrays.asList(
-                new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(),
-                new PISAHypervolume<DoubleSolution>(),
-                new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));
+        if (m < 10) {
+            moeadstmStudy.setIndicatorList(Arrays.asList(
+                    new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(), new PISAHypervolume<DoubleSolution>(), new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));
+        } else {
+            moeadstmStudy.setIndicatorList(Arrays.asList(
+                    new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));
+        }
         moeadstmStudy.setIndependentRuns(INDEPENDENT_RUNS);
         moeadstmStudy.setNumberOfCores(Runtime.getRuntime().availableProcessors());
         Experiment<DoubleSolution, List<DoubleSolution>> experiment = moeadstmStudy.build();
