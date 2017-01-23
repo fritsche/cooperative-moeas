@@ -1,77 +1,135 @@
 package org.uma.jmetal.algorithm.multiobjective.comoea;
 
+import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.CooperativeAlgorithm;
+import java.util.ArrayList;
 import java.util.List;
-import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
+import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.SolutionListUtils;
 
-public class COMOEA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, List<S>> {
+public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
 
-    public COMOEA(Problem<S> problem) {
-        super(problem);
+    protected int maxIterations;
+    protected int populationSize;
+    protected int N; // number of generations to share information
+    protected Problem<S> problem;
+
+    protected List<CooperativeAlgorithm<S>> algorithms;
+
+    public COMOEA(COMOEABuilder builder) {
+
+        this.problem = (builder.getProblem());
+        this.maxIterations = (builder.getMaxIterations());
+        this.populationSize = (builder.getPopulationSize());
+        this.N = (builder.getN());
+        this.algorithms = (builder.getAlgorithms());
+
+        // set the population size of each sub-algorithm
+        int populationFree = this.populationSize;
+        int numAlgorithms = algorithms.size();
+        for (int alg = 0; alg < numAlgorithms; ++alg) {
+            int size = populationFree / (numAlgorithms - alg);
+            algorithms.get(alg).setPopulationSize(size);
+            populationFree -= size;
+        }
+
     }
 
-    @Override
-    protected void initProgress() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int getPopulationSize() {
+        return populationSize;
     }
 
-    @Override
-    protected void updateProgress() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected boolean isStoppingConditionReached() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected List<S> evaluatePopulation(List<S> population) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected List<S> replacement(List<S> population, List<S> offspringPopulation) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setPopulationSize(int populationSize) {
+        this.populationSize = populationSize;
     }
 
     @Override
     public List<S> getResult() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // All population joint + remove dominated solutions
+
+        List<S> result = new ArrayList<>();
+
+        algorithms.stream().forEach((co) -> {
+            result.addAll(co.getResult());
+        });
+
+        return SolutionListUtils.getNondominatedSolutions(result);
+    }
+
+    public List<CooperativeAlgorithm<S>> getAlgorithms() {
+        return algorithms;
+    }
+
+    public void setAlgorithms(List<CooperativeAlgorithm<S>> algorithms) {
+        this.algorithms = algorithms;
+    }
+
+    public int getMaxIterations() {
+        return maxIterations;
+    }
+
+    public void setMaxIterations(int maxIterations) {
+        this.maxIterations = maxIterations;
+    }
+
+    public int getN() {
+        return N;
+    }
+
+    public void setN(int N) {
+        this.N = N;
+    }
+
+    public void setProblem(Problem<S> problem) {
+        this.problem = problem;
+    }
+
+    public Problem<S> getProblem() {
+        return problem;
     }
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "COMOEA";
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Coopeartive Multi-objective Evolutionary Algorithms";
     }
 
     @Override
     public void run() {
-        List<List<S>> offspringPopulation;
+        List<List<S>> offspringPopulation = new ArrayList<>();
 
-        // foreach algorithm in cooperativeAlgorithmList
-            this.setPopulation(createInitialPopulation());
-            this.evaluatePopulation(this.getPopulation());
-        //
-        initProgress();
-        while (!isStoppingConditionReached()) {
-            // foreach algorithm in cooperativeAlgorithmList
-                // offspringPopulationList[algorithm] = generateOffspring (algorithm.getPopulation());
-            //
-            
-            // foreach algorithm in cooperativeAlgorithmList
-                // algorithm.updatePopulation(offspringPopulationList);
-            //
-            
-            updateProgress();
+        algorithms.stream().forEach((co) -> {
+            co.init();
+            offspringPopulation.add(new ArrayList<>());
+        });
+
+        // count initialization as one iteration
+        for (int iterations = 1; iterations < maxIterations; ++iterations) {
+
+            for (int alg = 0; alg < algorithms.size(); ++alg) {
+                algorithms.get(alg).generateOffspring(offspringPopulation.get(alg));
+            }
+
+            if (iterations % N == 0) {
+                List<S> joint = new ArrayList<>();
+                offspringPopulation.stream().forEach((offspring) -> {
+                    joint.addAll(offspring);
+                });
+                for (int alg = 0; alg < algorithms.size(); ++alg) {
+                    offspringPopulation.set(alg, joint);
+                }
+            }
+
+            for (int alg = 0; alg < algorithms.size(); ++alg) {
+                algorithms.get(alg).updatePopulation(offspringPopulation.get(alg));
+            }
         }
-    }
-    
-}
 
+    }
+
+}
