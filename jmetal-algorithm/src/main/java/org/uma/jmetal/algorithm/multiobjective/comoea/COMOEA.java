@@ -112,7 +112,7 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
         for (int iterations = 1; iterations < maxIterations; ++iterations) {
 
             for (int alg = 0; alg < algorithms.size(); ++alg) {
-                algorithms.get(alg).generateOffspring(offspringPopulation.get(alg));
+                offspringPopulation.set(alg, algorithms.get(alg).generateOffspring(offspringPopulation.get(alg)));
             }
 
             if (iterations % N == 0) {

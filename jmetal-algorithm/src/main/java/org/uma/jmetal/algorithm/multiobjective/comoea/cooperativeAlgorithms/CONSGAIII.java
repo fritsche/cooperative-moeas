@@ -6,29 +6,33 @@ import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIIIBuilder;
 import org.uma.jmetal.solution.Solution;
 
 public class CONSGAIII<S extends Solution<?>> extends NSGAIII<S> implements CooperativeAlgorithm<S> {
-    
+
     public CONSGAIII(NSGAIIIBuilder builder) {
         super(builder);
     }
 
     @Override
     public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setPopulation(evaluatePopulation(createInitialPopulation()));
     }
 
     @Override
-    public void generateOffspring(List<S> offspringPopulation) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<S> generateOffspring(List<S> offspringPopulation) {
+        List<S> matingPopulation;
+        matingPopulation = selection(getPopulation());
+        offspringPopulation = reproduction(matingPopulation);
+        offspringPopulation = evaluatePopulation(offspringPopulation);
+        return offspringPopulation;
     }
 
     @Override
     public void updatePopulation(List<S> offspringPopulation) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setPopulation(replacement(getPopulation(), offspringPopulation));
     }
 
     @Override
     public void setPopulationSize(int popSize) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setMaxPopulationSize(popSize);
     }
-    
+
 }
