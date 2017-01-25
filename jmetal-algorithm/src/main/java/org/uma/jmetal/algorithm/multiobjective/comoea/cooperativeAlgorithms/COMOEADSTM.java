@@ -31,11 +31,6 @@ public class COMOEADSTM<S extends Solution<?>> extends MOEADSTM implements Coope
     }
 
     @Override
-    public void setPopulationSize(int popSize) {
-        this.populationSize = popSize;
-    }
-
-    @Override
     public List<DoubleSolution> generateOffspring(List<DoubleSolution> offspringPopulation) {
         int[] permutation = new int[populationSize];
         MOEADUtils.randomPermutation(permutation, populationSize);

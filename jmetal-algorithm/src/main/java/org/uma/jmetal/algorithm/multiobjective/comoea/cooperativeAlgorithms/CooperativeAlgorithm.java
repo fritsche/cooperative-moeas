@@ -10,9 +10,6 @@ public interface CooperativeAlgorithm<S extends Solution<?>> extends Algorithm<L
     // may be empty
     public void init();
 
-    // COMOEA has the responsability of setting the population size of the sub-algorithms
-    public void setPopulationSize(int popSize);
-
     public List<S> generateOffspring(List<S> offspringPopulation);
 
     public void updatePopulation(List<S> offspringPopulation);

@@ -11,7 +11,6 @@ import org.uma.jmetal.util.SolutionListUtils;
 public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
 
     protected int maxIterations;
-    protected int populationSize;
     protected int N; // number of generations to share information
     protected Problem<S> problem;
 
@@ -21,27 +20,8 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
 
         this.problem = (builder.getProblem());
         this.maxIterations = (builder.getMaxIterations());
-        this.populationSize = (builder.getPopulationSize());
         this.N = (builder.getN());
         this.algorithms = (builder.getAlgorithms());
-
-        // set the population size of each sub-algorithm
-        int populationFree = this.populationSize;
-        int numAlgorithms = algorithms.size();
-        for (int alg = 0; alg < numAlgorithms; ++alg) {
-            int size = populationFree / (numAlgorithms - alg);
-            algorithms.get(alg).setPopulationSize(size);
-            populationFree -= size;
-        }
-
-    }
-
-    public int getPopulationSize() {
-        return populationSize;
-    }
-
-    public void setPopulationSize(int populationSize) {
-        this.populationSize = populationSize;
     }
 
     @Override
@@ -109,7 +89,7 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
         });
 
         // count initialization as one iteration
-        for (int iterations = 1; iterations < maxIterations; ++iterations) {
+        for (int iterations = algorithms.size(); iterations < maxIterations; iterations += algorithms.size()) {
 
             for (int alg = 0; alg < algorithms.size(); ++alg) {
                 offspringPopulation.set(alg, algorithms.get(alg).generateOffspring(offspringPopulation.get(alg)));
