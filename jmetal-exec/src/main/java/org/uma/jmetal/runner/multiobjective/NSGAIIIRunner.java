@@ -39,6 +39,7 @@ import org.uma.jmetal.util.fileoutput.SolutionListOutput;
 import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 
 import java.util.List;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1;
 
 /**
  * Class to configure and run the NSGA-III algorithm
@@ -64,9 +65,10 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
 
     String problemName = "org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1" ;
 
-    problem = ProblemUtils.loadProblem(problemName);
+    // problem = ProblemUtils.loadProblem(problemName);
+    problem = new DTLZ1(100, 3);
     
-    double crossoverProbability = 0.9 ;
+    double crossoverProbability = 1.0 ;
     double crossoverDistributionIndex = 30.0 ;
     crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex) ;
 
@@ -81,6 +83,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
             .setMutationOperator(mutation)
             .setSelectionOperator(selection)
             .setMaxIterations(500)
+            .setUniformWeightFileName("MOEAD_Weights/W2D_91.dat")
             .build() ;
 
     AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)
