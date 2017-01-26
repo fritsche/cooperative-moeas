@@ -61,6 +61,12 @@ local.properties
 .classpath
 .project
 
+###
+# Netbeans
+###
+
+*nb-configuration.xml
+
 # External tool builders
 .externalToolBuilders/
 
