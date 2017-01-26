@@ -54,7 +54,7 @@ public class NSGAIIIConfiguration implements AlgorithmConfiguration<DoubleSoluti
                 .setSelectionOperator(selection)
                 .setMaxIterations(generations)
                     // the NSGA-III population size is set based on the number of weights
-                .setUniformWeightFileName("MOEAD_Weights/W" + problem.getNumberOfObjectives() + "D_" + problem.getNumberOfVariables() + ".dat")
+                .setUniformWeightFileName("MOEAD_Weights/W" + problem.getNumberOfObjectives() + "D_" + popSize + ".dat")
                 .build();
     }
     
