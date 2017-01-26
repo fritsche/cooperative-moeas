@@ -201,10 +201,5 @@ public class NSGAIIIMethodology {
         new ExecuteAlgorithms<>(experiment).run();
         new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
         new ComputeQualityIndicators<>(experiment).run();
-        new GenerateLatexTablesWithStatistics(experiment).run();
-        new GenerateWilcoxonTestTablesWithR<>(experiment).run();
-        new GenerateFriedmanTestTables<>(experiment).run();
-        new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).setDisplayNotch().run();
-
     }
 }
