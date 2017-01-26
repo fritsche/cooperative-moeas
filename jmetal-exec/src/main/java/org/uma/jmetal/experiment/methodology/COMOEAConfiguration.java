@@ -52,7 +52,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         this.subAlgorithms = Arrays.asList(subAlgorithms);
     }
 
-    public static CONSGAIII configureCONSGAIII(Problem problem) {
+    public static CONSGAIII configureCONSGAIII(Problem problem, int popSize) {
 
         double crossoverProbability = 0.9;
         double crossoverDistributionIndex = 30.0;
@@ -70,11 +70,11 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                 .setCrossoverOperator(crossover)
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
-                .setUniformWeightFileName("MOEAD_Weights/W" + problem.getNumberOfObjectives() + "D_" + problem.getNumberOfVariables() + ".dat")
+                .setUniformWeightFileName("MOEAD_Weights/W" + problem.getNumberOfObjectives() + "D_" + popSize + ".dat")
                 .build();
     }
 
-    private static COMOEADSTM configureCOMOEADSTM(Problem problem) {
+    private static COMOEADSTM configureCOMOEADSTM(Problem problem, int popSize) {
         MutationOperator<DoubleSolution> mutation;
         DifferentialEvolutionCrossover crossover;
         double cr = 1.0;
@@ -91,7 +91,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                 .setNeighborhoodSelectionProbability(0.9)
                 .setMaximumNumberOfReplacedSolutions(2)
                 .setNeighborSize(20)
-                .setPopulationSize(91)
+                .setPopulationSize(popSize)
                 .setFunctionType(AbstractMOEAD.FunctionType.TCHE)
                 .setDataDirectory("MOEAD_Weights")
                 .build();
@@ -106,10 +106,10 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         for (SUB_ALGORITHM alg : subAlgorithms) {
             switch (alg) {
                 case CONSGAIII:
-                    builder.addAlgorithm(configureCONSGAIII(problem));
+                    builder.addAlgorithm(configureCONSGAIII(problem, popSize));
                     break;
                 case COMOEADSTM:
-                    builder.addAlgorithm(configureCOMOEADSTM(problem));
+                    builder.addAlgorithm(configureCOMOEADSTM(problem, popSize));
                     break;
             }
         }
