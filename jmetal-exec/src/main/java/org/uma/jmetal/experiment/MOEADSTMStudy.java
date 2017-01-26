@@ -35,7 +35,7 @@ import org.uma.jmetal.util.JMetalException;
 public class MOEADSTMStudy {
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
+        if (args.length != 3) {
             throw new JMetalException("Needed arguments: experimentBaseDirectory and an integer m");
         }
         String experimentBaseDirectory = args[0];

@@ -21,20 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 import org.uma.jmetal.experiment.methodology.AlgorithmConfiguration;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration;
-import org.uma.jmetal.experiment.methodology.NSGAIIIConfiguration;
+import org.uma.jmetal.experiment.methodology.MOEADSTMConfiguration;
 import org.uma.jmetal.experiment.methodology.NSGAIIIMethodology;
 import org.uma.jmetal.util.JMetalException;
-import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
 
 /**
- * This experiment compares the NSGA-III with CONSGA-III. The objective is to
+ * This experiment compares the MOEA/D-STM with CoMOEA/D-STM. The objective is to
  * check if they are equivalent (as they should).
- *
+ * 
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class CONSGAIIIStudy extends NSGAIIIMethodology {
-
-    public static void main(String[] args) throws IOException {
+public class COMOEADSTMStudy {
+        public static void main(String[] args) throws IOException {
         if (args.length != 3) {
             throw new JMetalException("Needed arguments: experimentBaseDirectory experimentName m");
         }
@@ -43,11 +41,10 @@ public class CONSGAIIIStudy extends NSGAIIIMethodology {
         int m = Integer.parseInt(args[2]);
 
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
-        configurations.add(new NSGAIIIConfiguration());
-        configurations.add(new COMOEAConfiguration(SUB_ALGORITHM.CONSGAIII));
+        configurations.add(new MOEADSTMConfiguration());
+        configurations.add(new COMOEAConfiguration(COMOEAConfiguration.SUB_ALGORITHM.COMOEADSTM));
         
         new NSGAIIIMethodology().execute(experimentBaseDirectory, experimentName, m, configurations);
         
     }
-
 }
