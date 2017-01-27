@@ -13,4 +13,7 @@ public interface CooperativeAlgorithm<S extends Solution<?>> extends Algorithm<L
     public List<S> generateOffspring(List<S> offspringPopulation);
 
     public void updatePopulation(List<S> offspringPopulation);
+    
+    public int getPopulationSize();
+    
 }

@@ -30,4 +30,9 @@ public class CONSGAIII<S extends Solution<?>> extends NSGAIII<S> implements Coop
         setPopulation(replacement(getPopulation(), offspringPopulation));
     }
 
+    @Override
+    public int getPopulationSize() {
+        return getMaxPopulationSize();
+    }
+
 }

@@ -19,6 +19,7 @@ package org.uma.jmetal.experiment.methodology;
 import java.util.Arrays;
 import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
+import org.uma.jmetal.algorithm.multiobjective.comoea.COMOEA;
 import org.uma.jmetal.algorithm.multiobjective.comoea.COMOEABuilder;
 import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTM;
 import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTMBuilder;
@@ -46,10 +47,16 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         CONSGAIII, COMOEADSTM
     };
 
-    private final List<SUB_ALGORITHM> subAlgorithms;
+    public enum APPROACH {
+        SPLIT_POPULATION, SPLIT_ITERATIONS
+    };
 
-    public COMOEAConfiguration(SUB_ALGORITHM ... subAlgorithms) {
+    private final List<SUB_ALGORITHM> subAlgorithms;
+    private final APPROACH approach;
+
+    public COMOEAConfiguration(APPROACH approach, SUB_ALGORITHM... subAlgorithms) {
         this.subAlgorithms = Arrays.asList(subAlgorithms);
+        this.approach = approach;
     }
 
     public static CONSGAIII configureCONSGAIII(Problem problem, int popSize) {
@@ -70,7 +77,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                 .setCrossoverOperator(crossover)
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
-                .setUniformWeightFileName("MOEAD_Weights/W" + problem.getNumberOfObjectives() + "D_" + popSize + ".dat")
+                .setUniformWeightFileName("NSGAIII_Weights/W" + problem.getNumberOfObjectives() + "D_" + popSize + ".dat")
                 .build();
     }
 
@@ -103,6 +110,13 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         COMOEABuilder builder = new COMOEABuilder<>(problem)
                 .setMaxIterations(generations)
                 .setN(5);
+
+        String app = "SPLIT_ITERATIONS";
+        if (approach == APPROACH.SPLIT_POPULATION) {
+            popSize = (int) Math.ceil(popSize / 2.0);
+            app = "SPLIT_POPULATION";
+        }
+
         for (SUB_ALGORITHM alg : subAlgorithms) {
             switch (alg) {
                 case CONSGAIII:
@@ -113,7 +127,10 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                     break;
             }
         }
-        return builder.build();
+
+        COMOEA algorithm = builder.build();
+        algorithm.setName("COMOEA " + app);
+        return algorithm;
     }
 
 }

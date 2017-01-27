@@ -10,6 +10,8 @@ import org.uma.jmetal.util.SolutionListUtils;
 
 public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
 
+    protected String name = "COMOEA";
+    
     protected int maxIterations;
     protected int N; // number of generations to share information
     protected Problem<S> problem;
@@ -71,7 +73,11 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
 
     @Override
     public String getName() {
-        return "COMOEA";
+        return name;
+    }
+    
+    public void setName(String name){
+        this.name = name;
     }
 
     @Override
@@ -83,19 +89,22 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
     public void run() {
         List<List<S>> offspringPopulation = new ArrayList<>();
 
-        algorithms.stream().forEach((co) -> {
+        int inc = 0;
+        for (CooperativeAlgorithm co : algorithms) {
             co.init();
             offspringPopulation.add(new ArrayList<>());
-        });
+            inc += co.getPopulationSize();
+        }
 
         // count initialization as one iteration
-        for (int iterations = algorithms.size(); iterations < maxIterations; iterations += algorithms.size()) {
+        int maxFe = maxIterations * inc;
+        for (int fe = inc, it = 1; fe < maxFe; fe += inc, ++it) {
 
             for (int alg = 0; alg < algorithms.size(); ++alg) {
                 offspringPopulation.set(alg, algorithms.get(alg).generateOffspring(offspringPopulation.get(alg)));
             }
 
-            if (iterations % N == 0) {
+            if (it % N == 0) {
                 List<S> joint = new ArrayList<>();
                 offspringPopulation.stream().forEach((offspring) -> {
                     joint.addAll(offspring);

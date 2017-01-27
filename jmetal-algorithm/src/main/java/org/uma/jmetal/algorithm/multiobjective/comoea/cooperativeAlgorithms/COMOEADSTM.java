@@ -87,4 +87,9 @@ public class COMOEADSTM<S extends Solution<?>> extends MOEADSTM implements Coope
         }
     }
 
+    @Override
+    public int getPopulationSize() {
+        return populationSize;
+    }
+
 }

@@ -39,11 +39,7 @@ import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
 import org.uma.jmetal.util.experiment.component.ExecuteAlgorithms;
-import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
-import org.uma.jmetal.util.experiment.component.GenerateFriedmanTestTables;
-import org.uma.jmetal.util.experiment.component.GenerateLatexTablesWithStatistics;
 import org.uma.jmetal.util.experiment.component.GenerateReferenceParetoSetAndFrontFromDoubleSolutions;
-import org.uma.jmetal.util.experiment.component.GenerateWilcoxonTestTablesWithR;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
@@ -186,7 +182,7 @@ public class NSGAIIIMethodology {
         moeadstmStudy.setExperimentBaseDirectory(experimentBaseDirectory);
         moeadstmStudy.setOutputParetoFrontFileName("FUN");
         moeadstmStudy.setOutputParetoSetFileName("VAR");
-        moeadstmStudy.setReferenceFrontDirectory(experimentBaseDirectory + "/referenceFronts");
+        moeadstmStudy.setReferenceFrontDirectory(experimentBaseDirectory + File.separator + experimentName + File.separator + m + "/referenceFronts");
         if (m < 10) {
             moeadstmStudy.setIndicatorList(Arrays.asList(
                     new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(), new PISAHypervolume<DoubleSolution>(), new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));

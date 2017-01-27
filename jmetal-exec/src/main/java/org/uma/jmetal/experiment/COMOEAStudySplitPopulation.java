@@ -24,16 +24,16 @@ import org.uma.jmetal.experiment.methodology.COMOEAConfiguration;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
 import org.uma.jmetal.experiment.methodology.MOEADSTMConfiguration;
+import org.uma.jmetal.experiment.methodology.NSGAIIIConfiguration;
 import org.uma.jmetal.experiment.methodology.NSGAIIIMethodology;
 import org.uma.jmetal.util.JMetalException;
 
 /**
- * This experiment compares the MOEA/D-STM with CoMOEA/D-STM. The objective is
- * to check if they are equivalent (as they should).
+ * This experiment compares the CoMOEA using two different approaches
  *
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class COMOEADSTMStudy {
+public class COMOEAStudySplitPopulation {
 
     public static void main(String[] args) throws IOException {
 
@@ -45,8 +45,16 @@ public class COMOEADSTMStudy {
         int m = Integer.parseInt(args[2]);
 
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
+        configurations.add(new NSGAIIIConfiguration());
         configurations.add(new MOEADSTMConfiguration());
-        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_ITERATIONS, SUB_ALGORITHM.COMOEADSTM));
+        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_POPULATION,
+                SUB_ALGORITHM.COMOEADSTM,
+                SUB_ALGORITHM.CONSGAIII
+        ));
+        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_ITERATIONS,
+                SUB_ALGORITHM.COMOEADSTM,
+                SUB_ALGORITHM.CONSGAIII
+        ));
 
         new NSGAIIIMethodology().execute(experimentBaseDirectory, experimentName, m, configurations);
 

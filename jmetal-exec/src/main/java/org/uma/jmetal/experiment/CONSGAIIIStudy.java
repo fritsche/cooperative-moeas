@@ -25,6 +25,7 @@ import org.uma.jmetal.experiment.methodology.NSGAIIIConfiguration;
 import org.uma.jmetal.experiment.methodology.NSGAIIIMethodology;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
+import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
 
 /**
  * This experiment compares the NSGA-III with CONSGA-III. The objective is to
@@ -44,7 +45,7 @@ public class CONSGAIIIStudy extends NSGAIIIMethodology {
 
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
         configurations.add(new NSGAIIIConfiguration());
-        configurations.add(new COMOEAConfiguration(SUB_ALGORITHM.CONSGAIII));
+        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_ITERATIONS, SUB_ALGORITHM.CONSGAIII));
         
         new NSGAIIIMethodology().execute(experimentBaseDirectory, experimentName, m, configurations);
         
