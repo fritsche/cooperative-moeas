@@ -129,7 +129,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         }
 
         COMOEA algorithm = builder.build();
-        algorithm.setName("COMOEA " + app);
+        algorithm.setName("COMOEA_" + app);
         return algorithm;
     }
 
