@@ -12,7 +12,7 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
 
     protected String name = "COMOEA";
     
-    protected int maxIterations;
+    protected int maxEvaluations;
     protected int N; // number of generations to share information
     protected Problem<S> problem;
 
@@ -21,7 +21,7 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
     public COMOEA(COMOEABuilder builder) {
 
         this.problem = (builder.getProblem());
-        this.maxIterations = (builder.getMaxIterations());
+        this.maxEvaluations = (builder.getMaxEvaluations());
         this.N = (builder.getN());
         this.algorithms = (builder.getAlgorithms());
     }
@@ -47,12 +47,12 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
         this.algorithms = algorithms;
     }
 
-    public int getMaxIterations() {
-        return maxIterations;
+    public int getMaxEvaluations() {
+        return maxEvaluations;
     }
 
-    public void setMaxIterations(int maxIterations) {
-        this.maxIterations = maxIterations;
+    public void setMaxEvaluations(int maxEvaluations) {
+        this.maxEvaluations = maxEvaluations;
     }
 
     public int getN() {
@@ -97,8 +97,7 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
         }
 
         // count initialization as one iteration
-        int maxFe = maxIterations * inc;
-        for (int fe = inc, it = 1; fe < maxFe; fe += inc, ++it) {
+        for (int fe = inc, it = 1; fe < maxEvaluations; fe += inc, ++it) {
 
             for (int alg = 0; alg < algorithms.size(); ++alg) {
                 offspringPopulation.set(alg, algorithms.get(alg).generateOffspring(offspringPopulation.get(alg)));

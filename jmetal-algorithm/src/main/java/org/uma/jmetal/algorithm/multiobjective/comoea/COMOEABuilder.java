@@ -10,13 +10,13 @@ import org.uma.jmetal.util.AlgorithmBuilder;
 public class COMOEABuilder<S extends Solution<?>> implements AlgorithmBuilder<COMOEA<S>> {
 
     private final Problem<S> problem;
-    private int maxIterations;
+    private int maxEvaluations;
     private int N;
     protected List<CooperativeAlgorithm<S>> algorithms;
 
     public COMOEABuilder(Problem<S> problem) {
         this.problem = problem;
-        maxIterations = 250;
+        maxEvaluations = 250 * 91;
         N = 1;
         algorithms = new ArrayList<>();
     }
@@ -38,8 +38,8 @@ public class COMOEABuilder<S extends Solution<?>> implements AlgorithmBuilder<CO
         return problem;
     }
 
-    public int getMaxIterations() {
-        return maxIterations;
+    public int getMaxEvaluations() {
+        return maxEvaluations;
     }
 
     public COMOEABuilder<S> setN(int N) {
@@ -47,8 +47,8 @@ public class COMOEABuilder<S extends Solution<?>> implements AlgorithmBuilder<CO
         return this;
     }
 
-    public COMOEABuilder<S> setMaxIterations(int maxIterations) {
-        this.maxIterations = maxIterations;
+    public COMOEABuilder<S> setMaxEvaluations(int maxEvaluations) {
+        this.maxEvaluations = maxEvaluations;
         return this;
     }
 

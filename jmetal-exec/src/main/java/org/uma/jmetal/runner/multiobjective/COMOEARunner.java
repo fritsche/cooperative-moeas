@@ -79,7 +79,7 @@ public class COMOEARunner extends AbstractAlgorithmRunner {
         Problem problem = new DTLZ1(D, m);
 
         algorithm = new COMOEABuilder<>(problem)
-                .setMaxIterations(500) // the COMOEA is responsible for sharing the maxIterations among the algorithms
+                .setMaxEvaluations(500 * 91)
                 .setN(5)
                 .addAlgorithm(configureCONSGAIII(problem))
                 .addAlgorithm(configureCOMOEADSTM(problem))

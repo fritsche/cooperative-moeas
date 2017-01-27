@@ -108,7 +108,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
     public Algorithm cofigure(Problem<Solution<?>> problem, int popSize, int generations) {
 
         COMOEABuilder builder = new COMOEABuilder<>(problem)
-                .setMaxIterations(generations)
+                .setMaxEvaluations(generations * popSize)
                 .setN(5);
 
         String app = "SPLIT_ITERATIONS";
