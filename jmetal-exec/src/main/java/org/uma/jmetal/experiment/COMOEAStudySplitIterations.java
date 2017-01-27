@@ -29,11 +29,12 @@ import org.uma.jmetal.experiment.methodology.NSGAIIIMethodology;
 import org.uma.jmetal.util.JMetalException;
 
 /**
- * This experiment compares the CoMOEA using two different approaches
+ * This experiment compares the CoMOEA using MOEA/D-STM and NSGA-III as
+ * sub-algorithms to MOEA/D-STM and NSGA-III
  *
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class COMOEAStudySplitPopulation {
+public class COMOEAStudySplitIterations {
 
     public static void main(String[] args) throws IOException {
 
@@ -47,10 +48,6 @@ public class COMOEAStudySplitPopulation {
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
         configurations.add(new NSGAIIIConfiguration());
         configurations.add(new MOEADSTMConfiguration());
-        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_POPULATION,
-                SUB_ALGORITHM.COMOEADSTM,
-                SUB_ALGORITHM.CONSGAIII
-        ));
         configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_ITERATIONS,
                 SUB_ALGORITHM.COMOEADSTM,
                 SUB_ALGORITHM.CONSGAIII
