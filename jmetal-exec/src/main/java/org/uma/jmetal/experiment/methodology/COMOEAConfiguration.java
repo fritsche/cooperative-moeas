@@ -81,7 +81,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                 .build();
     }
 
-    private static COMOEADSTM configureCOMOEADSTM(Problem problem, int popSize) {
+    public static COMOEADSTM configureCOMOEADSTM(Problem problem, int popSize) {
         MutationOperator<DoubleSolution> mutation;
         DifferentialEvolutionCrossover crossover;
         double cr = 1.0;
