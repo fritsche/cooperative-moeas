@@ -183,7 +183,7 @@ public class NSGAIIIMethodology {
         moeadstmStudy.setOutputParetoFrontFileName("FUN");
         moeadstmStudy.setOutputParetoSetFileName("VAR");
         moeadstmStudy.setReferenceFrontDirectory(experimentBaseDirectory + File.separator + experimentName + File.separator + m + "/referenceFronts");
-        if (m < 10) {
+        if (m < 8) {
             moeadstmStudy.setIndicatorList(Arrays.asList(
                     new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(), new PISAHypervolume<DoubleSolution>(), new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));
         } else {
