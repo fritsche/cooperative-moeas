@@ -66,6 +66,7 @@ local.properties
 ###
 
 *nb-configuration.xml
+*nbactions.xml
 
 # External tool builders
 .externalToolBuilders/
