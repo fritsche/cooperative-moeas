@@ -101,50 +101,6 @@ public class COMOEATuningStudy2 {
                 );
             }
         }
-        
-        // SPLIT_POPULATION
-        for (int n : N) {
-            for (int i = 0; i < problemList.size(); i++) {
-
-                Problem<DoubleSolution> problem = problemList.get(i).getProblem();
-
-                int popSize = 300; // default
-                int m = problem.getNumberOfObjectives();
-
-                switch (m) {
-                    case 3:
-                        popSize = 91;
-                        break;
-                    case 5:
-                        popSize = 210;
-                        break;
-                    case 8:
-                        popSize = 156;
-                        break;
-                    case 10:
-                        popSize = 275;
-                        break;
-                    case 15:
-                        popSize = 135;
-                        break;
-                }
-
-                COMOEABuilder builder = new COMOEABuilder<>(problem)
-                        .setMaxEvaluations(generationsList.get(i) * popSize)
-                        .setN(n);
-                popSize = (int) Math.ceil(popSize / 2.0);
-                builder.addAlgorithm(COMOEAConfiguration.configureCONSGAIII(problem, popSize));
-                builder.addAlgorithm(COMOEAConfiguration.configureCOMOEADSTM(problem, popSize));
-                COMOEA algorithm = builder.build();
-                algorithm.setName("POPN" + n);
-
-                algorithms.add(
-                        new ExperimentAlgorithm<>(
-                                algorithm,
-                                problemList.get(i).getTag())
-                );
-            }
-        }
 
         return algorithms;
     }
