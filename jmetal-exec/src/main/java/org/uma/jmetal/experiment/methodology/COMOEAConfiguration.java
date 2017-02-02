@@ -109,7 +109,9 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
 
         COMOEABuilder builder = new COMOEABuilder<>(problem)
                 .setMaxEvaluations(generations * popSize)
-                .setN(5);
+                // changed default to 1 after parameter tuning: 
+                // COMOEATuningStudy and COMOEATuningStudy2
+                .setN(1); 
 
         String app = "SPLIT_ITERATIONS";
         if (approach == APPROACH.SPLIT_POPULATION) {
@@ -129,7 +131,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         }
 
         COMOEA algorithm = builder.build();
-        algorithm.setName("COMOEA_" + app);
+        algorithm.setName("COMOEA");
         return algorithm;
     }
 
