@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.uma.jmetal.experiment;
+package org.uma.jmetal.runner.multiobjective;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,16 +46,16 @@ import org.uma.jmetal.util.pseudorandom.JMetalRandom;
  *
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class ParameterizedExperiment<Result> extends ExecuteAlgorithms<Solution<?>, Result> {
+public class ParameterizedRunner<Result> extends ExecuteAlgorithms<Solution<?>, Result> {
 
     private final int id;
 
-    public ParameterizedExperiment(Experiment<Solution<?>, Result> configuration, int id) {
+    public ParameterizedRunner(Experiment<Solution<?>, Result> configuration, int id) {
         super(configuration);
         this.id = id;
     }
 
-    private static List<ExperimentProblem<DoubleSolution>> getProblemList(String problem, int m) {
+    public static List<ExperimentProblem<DoubleSolution>> getProblemList(String problem, int m) {
         List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
         int k;
         switch (problem) {
@@ -89,7 +89,7 @@ public class ParameterizedExperiment<Result> extends ExecuteAlgorithms<Solution<
         return problemList;
     }
 
-    private static int getGenerationsNumber(String problem, int m) {
+    public static int getGenerationsNumber(String problem, int m) {
 
         int generations = 0;
 
@@ -210,7 +210,7 @@ public class ParameterizedExperiment<Result> extends ExecuteAlgorithms<Solution<
         return generations;
     }
 
-    private static int getPopSize(int m) {
+    public static int getPopSize(int m) {
         int popSize = 0;
         switch (m) {
             case 3:
@@ -248,7 +248,7 @@ public class ParameterizedExperiment<Result> extends ExecuteAlgorithms<Solution<
 
         if (args.length != 5) {
             throw new JMetalException("Needed arguments: "
-                    + "experimentBaseDirectory experimentName algorithm problem m id");
+                    + "experimentBaseDirectory algorithm problem m id");
         }
 
         int i = 0;
@@ -265,10 +265,10 @@ public class ParameterizedExperiment<Result> extends ExecuteAlgorithms<Solution<
         int popSize = getPopSize(m);
 
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();
-        
+
         algorithms.add(new ExperimentAlgorithm<>(AlgorithmConfigurationFactory.getAlgorithmConfiguration(algorithm).cofigure(problemList.get(0).getProblem(), popSize, generations), problemList.get(0).getTag()));
 
-        ExperimentBuilder<DoubleSolution, List<DoubleSolution>> study = new ExperimentBuilder<>(File.separator + m);
+        ExperimentBuilder<DoubleSolution, List<DoubleSolution>> study = new ExperimentBuilder<>(Integer.toString(m));
         study.setAlgorithmList(algorithms);
         study.setProblemList(problemList);
         study.setExperimentBaseDirectory(experimentBaseDirectory);
@@ -279,7 +279,7 @@ public class ParameterizedExperiment<Result> extends ExecuteAlgorithms<Solution<
         study.setNumberOfCores(1);
         Experiment<DoubleSolution, List<DoubleSolution>> experiment = study.build();
 
-        new ParameterizedExperiment(experiment, id).run();
+        new ParameterizedRunner(experiment, id).run();
 
     }
 
