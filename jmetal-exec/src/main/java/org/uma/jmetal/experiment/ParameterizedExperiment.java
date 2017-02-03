@@ -246,14 +246,13 @@ public class ParameterizedExperiment<Result> extends ExecuteAlgorithms<Solution<
 
     public static void main(String[] args) {
 
-        if (args.length != 6) {
+        if (args.length != 5) {
             throw new JMetalException("Needed arguments: "
                     + "experimentBaseDirectory experimentName algorithm problem m id");
         }
 
         int i = 0;
         String experimentBaseDirectory = args[i++];
-        String experimentName = args[i++];
         String algorithm = args[i++];
         String problem = args[i++];
         int m = Integer.parseInt(args[i++]);
@@ -266,16 +265,16 @@ public class ParameterizedExperiment<Result> extends ExecuteAlgorithms<Solution<
         int popSize = getPopSize(m);
 
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();
+        
+        algorithms.add(new ExperimentAlgorithm<>(AlgorithmConfigurationFactory.getAlgorithmConfiguration(algorithm).cofigure(problemList.get(0).getProblem(), popSize, generations), problemList.get(0).getTag()));
 
-        algorithms.add(new ExperimentAlgorithm<>(AlgorithmConfigurationFactory.getAlgorithmConfiguration(algorithm).cofigure(problemList.get(0).getProblem(), popSize, generations), problemList.get(i).getTag()));
-
-        ExperimentBuilder<DoubleSolution, List<DoubleSolution>> study = new ExperimentBuilder<>(experimentName + File.separator + m);
+        ExperimentBuilder<DoubleSolution, List<DoubleSolution>> study = new ExperimentBuilder<>(File.separator + m);
         study.setAlgorithmList(algorithms);
         study.setProblemList(problemList);
         study.setExperimentBaseDirectory(experimentBaseDirectory);
         study.setOutputParetoFrontFileName("FUN");
         study.setOutputParetoSetFileName("VAR");
-        study.setReferenceFrontDirectory(experimentBaseDirectory + File.separator + experimentName + File.separator + m + "/referenceFronts");
+        study.setReferenceFrontDirectory(experimentBaseDirectory + File.separator + m + "/referenceFronts");
         study.setIndependentRuns(1);
         study.setNumberOfCores(1);
         Experiment<DoubleSolution, List<DoubleSolution>> experiment = study.build();
