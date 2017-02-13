@@ -33,7 +33,7 @@ import java.io.File;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 public class ExecuteAlgorithms<S extends Solution<?>, Result> implements ExperimentComponent {
-  private Experiment<S, Result> experiment;
+  protected Experiment<S, Result> experiment;
 
   /** Constructor */
   public ExecuteAlgorithms(Experiment<S, Result> configuration) {
@@ -59,7 +59,7 @@ public class ExecuteAlgorithms<S extends Solution<?>, Result> implements Experim
 
 
 
-  private void prepareOutputDirectory() {
+  protected void prepareOutputDirectory() {
     if (experimentDirectoryDoesNotExist()) {
       createExperimentDirectory() ;
     }

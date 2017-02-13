@@ -118,42 +118,42 @@ public class NSGAIIIMethodology {
             case 3:
                 generationsList.add(400); // DTLZ1
                 generationsList.add(250); // DTLZ2
-                generationsList.add(1000);// DTLZ3
+                generationsList.add(1000); // DTLZ3
                 generationsList.add(600); // DTLZ4
                 generationsList.add(400); // WFG6
                 generationsList.add(400); // WFG7
                 break;
             case 5:
-                generationsList.add(600);
-                generationsList.add(350);
-                generationsList.add(1000);
-                generationsList.add(1000);
-                generationsList.add(750);
-                generationsList.add(750);
+                generationsList.add(600); // DTLZ1
+                generationsList.add(350); // DTLZ2
+                generationsList.add(1000); // DTLZ3
+                generationsList.add(1000); // DTLZ4
+                generationsList.add(750); // WFG6
+                generationsList.add(750); // WFG7
                 break;
             case 8:
-                generationsList.add(750);
-                generationsList.add(500);
-                generationsList.add(1000);
-                generationsList.add(1250);
-                generationsList.add(1500);
-                generationsList.add(1500);
+                generationsList.add(750); // DTLZ1
+                generationsList.add(500); // DTLZ2
+                generationsList.add(1000); // DTLZ3
+                generationsList.add(1250); // DTLZ4
+                generationsList.add(1500); // WFG6
+                generationsList.add(1500); // WFG7
                 break;
             case 10:
-                generationsList.add(1000);
-                generationsList.add(750);
-                generationsList.add(1500);
-                generationsList.add(2000);
-                generationsList.add(2000);
-                generationsList.add(2000);
+                generationsList.add(1000);  // DTLZ1
+                generationsList.add(750);   // DTLZ2
+                generationsList.add(1500);  // DTLZ3
+                generationsList.add(2000);  // DTLZ4
+                generationsList.add(2000);  // WFG6
+                generationsList.add(2000);  // WFG7
                 break;
             case 15:
-                generationsList.add(1500);
-                generationsList.add(1000);
-                generationsList.add(2000);
-                generationsList.add(3000);
-                generationsList.add(3000);
-                generationsList.add(3000);
+                generationsList.add(1500);  // DTLZ1
+                generationsList.add(1000);  // DTLZ2
+                generationsList.add(2000);  // DTLZ3
+                generationsList.add(3000);  // DTLZ4
+                generationsList.add(3000);  // WFG6
+                generationsList.add(3000);  // WFG7
                 break;
         }
 

@@ -1,6 +1,7 @@
 .idea
 jMetalMV.iml
 jMetal.log
+jMetal.log.*
 jMetal.log.ini
 jMetal.log.lck
 # ------------------------------------------------------------------------------
@@ -66,6 +67,7 @@ local.properties
 ###
 
 *nb-configuration.xml
+*nbactions.xml
 
 # External tool builders
 .externalToolBuilders/
