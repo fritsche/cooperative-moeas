@@ -50,6 +50,7 @@
         <module>jmetal-core</module>
         <module>jmetal-algorithm</module>
         <module>jmetal-problem</module>
+        <module>jmetal-exec</module>
     </modules>
 
     <properties>
