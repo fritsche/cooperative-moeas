@@ -33,7 +33,7 @@ import org.uma.jmetal.util.JMetalException;
  *
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class COMOEAStudy2 {
+public class COMOEAStudy3 {
 
     public static void main(String[] args) throws IOException {
 
@@ -47,7 +47,7 @@ public class COMOEAStudy2 {
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
         configurations.add(new NSGAIIIConfiguration());
         configurations.add(new MOEADSTMConfiguration());
-        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_ITERATIONS,
+        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_POPULATION,
                 SUB_ALGORITHM.COMOEADSTM,
                 SUB_ALGORITHM.CONSGAIII
         ));

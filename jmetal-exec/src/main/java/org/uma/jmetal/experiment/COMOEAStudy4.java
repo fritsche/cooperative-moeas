@@ -23,9 +23,9 @@ import org.uma.jmetal.experiment.methodology.AlgorithmConfiguration;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
-import org.uma.jmetal.experiment.methodology.COMOEAMethodology;
 import org.uma.jmetal.experiment.methodology.MOEADSTMConfiguration;
 import org.uma.jmetal.experiment.methodology.NSGAIIIConfiguration;
+import org.uma.jmetal.experiment.methodology.NSGAIIIMethodology;
 import org.uma.jmetal.util.JMetalException;
 
 /**
@@ -33,7 +33,7 @@ import org.uma.jmetal.util.JMetalException;
  *
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class COMOEAStudy2 {
+public class COMOEAStudy4 {
 
     public static void main(String[] args) throws IOException {
 
@@ -47,13 +47,12 @@ public class COMOEAStudy2 {
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
         configurations.add(new NSGAIIIConfiguration());
         configurations.add(new MOEADSTMConfiguration());
-        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_ITERATIONS,
+        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_POPULATION,
                 SUB_ALGORITHM.COMOEADSTM,
                 SUB_ALGORITHM.CONSGAIII
         ));
 
-        // double of iterations than NSGAIII methodology
-        new COMOEAMethodology().execute(experimentBaseDirectory, experimentName, m, configurations);
+        new NSGAIIIMethodology().execute(experimentBaseDirectory, experimentName, m, configurations);
 
     }
 }

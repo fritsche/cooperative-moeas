@@ -93,7 +93,7 @@ public class COMOEATuningStudy4 {
                 builder.addAlgorithm(COMOEAConfiguration.configureCONSGAIII(problem, popSize));
                 builder.addAlgorithm(COMOEAConfiguration.configureCOMOEADSTM(problem, popSize));
                 COMOEA algorithm = builder.build();
-                algorithm.setName("COMOEA_POP_N" + n);
+                algorithm.setName("POPN" + n);
 
                 algorithms.add(
                         new ExperimentAlgorithm<>(
