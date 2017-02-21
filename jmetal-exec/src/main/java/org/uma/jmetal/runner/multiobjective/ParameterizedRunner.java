@@ -16,7 +16,6 @@
  */
 package org.uma.jmetal.runner.multiobjective;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.uma.jmetal.experiment.methodology.AlgorithmConfigurationFactory;
@@ -274,7 +273,6 @@ public class ParameterizedRunner<Result> extends ExecuteAlgorithms<Solution<?>, 
         study.setExperimentBaseDirectory(experimentBaseDirectory);
         study.setOutputParetoFrontFileName("FUN");
         study.setOutputParetoSetFileName("VAR");
-        study.setReferenceFrontDirectory(experimentBaseDirectory + File.separator + m + "/referenceFronts");
         study.setIndependentRuns(1);
         study.setNumberOfCores(1);
         Experiment<DoubleSolution, List<DoubleSolution>> experiment = study.build();

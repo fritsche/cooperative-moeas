@@ -39,7 +39,7 @@ import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
 import org.uma.jmetal.util.experiment.component.ExecuteAlgorithms;
-import org.uma.jmetal.util.experiment.component.GenerateReferenceParetoSetAndFrontFromDoubleSolutions;
+import org.uma.jmetal.util.experiment.component.GenerateReferenceFrontFileNames;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
@@ -182,20 +182,20 @@ public class NSGAIIIMethodology {
         study.setExperimentBaseDirectory(experimentBaseDirectory);
         study.setOutputParetoFrontFileName("FUN");
         study.setOutputParetoSetFileName("VAR");
-        study.setReferenceFrontDirectory(experimentBaseDirectory + File.separator + experimentName + File.separator + m + "/referenceFronts");
+        study.setReferenceFrontDirectory(experimentBaseDirectory + File.separator + experimentName + File.separator + "referenceFronts");
         if (m < 8) {
             study.setIndicatorList(Arrays.asList(
-                    new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(), new PISAHypervolume<DoubleSolution>(), new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));
+                    new Epsilon<>(), new Spread<>(), new GenerationalDistance<>(), new PISAHypervolume<>(), new InvertedGenerationalDistance<>(), new InvertedGenerationalDistancePlus<>()));
         } else {
             study.setIndicatorList(Arrays.asList(
-                    new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));
+                    new Epsilon<>(), new Spread<>(), new GenerationalDistance<>(), new InvertedGenerationalDistance<>(), new InvertedGenerationalDistancePlus<>()));
         }
         study.setIndependentRuns(INDEPENDENT_RUNS);
         study.setNumberOfCores(Runtime.getRuntime().availableProcessors());
         Experiment<DoubleSolution, List<DoubleSolution>> experiment = study.build();
 
         new ExecuteAlgorithms<>(experiment).run();
-        new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
+        new GenerateReferenceFrontFileNames(experiment, m).run();
         new ComputeQualityIndicators<>(experiment).run();
     }
 }
