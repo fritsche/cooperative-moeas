@@ -37,7 +37,7 @@ public class NSGAIIIConfiguration implements AlgorithmConfiguration<DoubleSoluti
 
     @Override
     public Algorithm cofigure(Problem<DoubleSolution> problem, int popSize, int generations) {
-        double crossoverProbability = 0.9;
+        double crossoverProbability = 1.0;
             double crossoverDistributionIndex = 30.0;
             CrossoverOperator<DoubleSolution> crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
             MutationOperator<DoubleSolution> mutation;

@@ -61,7 +61,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
 
     public static CONSGAIII configureCONSGAIII(Problem problem, int popSize) {
 
-        double crossoverProbability = 0.9;
+        double crossoverProbability = 1.0;
         double crossoverDistributionIndex = 30.0;
         CrossoverOperator<DoubleSolution> crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
         MutationOperator<DoubleSolution> mutation;
