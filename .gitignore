@@ -1,6 +1,7 @@
 .idea
 jMetalMV.iml
 jMetal.log
+jMetal.log.*
 jMetal.log.ini
 jMetal.log.lck
 # ------------------------------------------------------------------------------
@@ -60,6 +61,13 @@ local.properties
 .loadpath
 .classpath
 .project
+
+###
+# Netbeans
+###
+
+*nb-configuration.xml
+*nbactions.xml
 
 # External tool builders
 .externalToolBuilders/
