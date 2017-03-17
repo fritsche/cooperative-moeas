@@ -28,6 +28,7 @@ import org.uma.jmetal.util.ProblemUtils;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import org.uma.jmetal.problem.multiobjective.UF.UF1;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1;
 
 /**
@@ -61,7 +62,7 @@ public class MOEADSTMRunner extends AbstractAlgorithmRunner {
     }
 
     // problem = (DoubleProblem)ProblemUtils.<DoubleSolution> loadProblem(problemName);
-    problem = new DTLZ1(100, 3);
+    problem = new UF1();
     double cr = 1.0 ;
     double f = 0.5 ;
     crossover = new DifferentialEvolutionCrossover(cr, f, "rand/1/bin");
@@ -73,9 +74,9 @@ public class MOEADSTMRunner extends AbstractAlgorithmRunner {
     algorithm = new MOEADBuilder(problem, MOEADBuilder.Variant.MOEADSTM)
         .setCrossover(crossover)
         .setMutation(mutation)
-        .setMaxEvaluations(150000)
-        .setPopulationSize(91)
-        .setResultPopulationSize(91)
+        .setMaxEvaluations(300000)
+        .setPopulationSize(600)
+        .setResultPopulationSize(600)
         .setNeighborhoodSelectionProbability(0.9)
         .setMaximumNumberOfReplacedSolutions(2)
         .setNeighborSize(20)
