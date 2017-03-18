@@ -111,7 +111,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                 .setMaxEvaluations(generations * popSize)
                 // changed default to 1 after parameter tuning: 
                 // COMOEATuningStudy and COMOEATuningStudy2
-                .setN(1); 
+                .setN(1);
 
         String app = "SPLIT_ITERATIONS";
         if (approach == APPROACH.SPLIT_POPULATION) {
@@ -119,19 +119,25 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
             app = "SPLIT_POPULATION";
         }
 
+        String algs = "";
         for (SUB_ALGORITHM alg : subAlgorithms) {
+            if (!"".equals(algs)) {
+                algs += ",";
+            }
             switch (alg) {
                 case CONSGAIII:
                     builder.addAlgorithm(configureCONSGAIII(problem, popSize));
+                    algs += "NSGAIII";
                     break;
                 case COMOEADSTM:
                     builder.addAlgorithm(configureCOMOEADSTM(problem, popSize));
+                    algs += "MOEADSTM";
                     break;
             }
         }
 
         COMOEA algorithm = builder.build();
-        algorithm.setName("COMOEA");
+        algorithm.setName("COMOEA(" + algs+")");
         return algorithm;
     }
 
