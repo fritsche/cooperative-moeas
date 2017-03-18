@@ -37,13 +37,19 @@ public class COMOEAStudy4 {
 
     public static void main(String[] args) throws IOException {
 
+        String experimentBaseDirectory;
+        String experimentName;
+        int m;
         if (args.length != 3) {
-            throw new JMetalException("Needed arguments: experimentBaseDirectory experimentName m");
+            System.err.println("WARNING: executing with default values");
+            experimentBaseDirectory = "teste";
+            experimentName = "COMOEA";
+            m = 3;
+        } else {
+            experimentBaseDirectory = args[0];
+            experimentName = args[1];
+            m = Integer.parseInt(args[2]);
         }
-        String experimentBaseDirectory = args[0];
-        String experimentName = args[1];
-        int m = Integer.parseInt(args[2]);
-
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
         configurations.add(new NSGAIIIConfiguration());
         configurations.add(new MOEADSTMConfiguration());
