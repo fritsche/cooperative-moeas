@@ -23,10 +23,9 @@ import org.uma.jmetal.experiment.methodology.AlgorithmConfiguration;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
-import org.uma.jmetal.experiment.methodology.MOEADSTMConfiguration;
+import org.uma.jmetal.experiment.methodology.MOEADSTM1Configuration;
 import org.uma.jmetal.experiment.methodology.NSGAIIIConfiguration;
 import org.uma.jmetal.experiment.methodology.NSGAIIIMethodology;
-import org.uma.jmetal.util.JMetalException;
 
 /**
  * This experiment compares the CoMOEA using two different approaches
@@ -52,9 +51,9 @@ public class COMOEAStudy4 {
         }
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
         configurations.add(new NSGAIIIConfiguration());
-        configurations.add(new MOEADSTMConfiguration());
+        configurations.add(new MOEADSTM1Configuration());
         configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_POPULATION,
-                SUB_ALGORITHM.COMOEADSTM,
+                SUB_ALGORITHM.COMOEADSTM1,
                 SUB_ALGORITHM.CONSGAIII
         ));
 

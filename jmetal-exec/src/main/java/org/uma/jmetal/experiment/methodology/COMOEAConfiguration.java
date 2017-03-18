@@ -22,6 +22,8 @@ import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.comoea.COMOEA;
 import org.uma.jmetal.algorithm.multiobjective.comoea.COMOEABuilder;
 import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTM;
+import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTM1;
+import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTM1Builder;
 import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTMBuilder;
 import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.CONSGAIII;
 import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.CONSGAIIIBuilder;
@@ -44,7 +46,7 @@ import org.uma.jmetal.solution.Solution;
 public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> {
 
     public enum SUB_ALGORITHM {
-        CONSGAIII, COMOEADSTM
+        CONSGAIII, COMOEADSTM, COMOEADSTM1
     };
 
     public enum APPROACH {
@@ -104,6 +106,29 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                 .build();
     }
 
+    public static COMOEADSTM1 configureCOMOEADSTM1(Problem problem, int popSize) {
+        MutationOperator<DoubleSolution> mutation;
+        DifferentialEvolutionCrossover crossover;
+        double cr = 1.0;
+        double f = 0.5;
+        crossover = new DifferentialEvolutionCrossover(cr, f, "rand/1/bin");
+
+        double mutationProbability = 1.0 / problem.getNumberOfVariables();
+        double mutationDistributionIndex = 20.0;
+        mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
+
+        return (COMOEADSTM1) new COMOEADSTM1Builder(problem)
+                .setCrossover(crossover)
+                .setMutation(mutation)
+                .setNeighborhoodSelectionProbability(0.9)
+                .setMaximumNumberOfReplacedSolutions(2)
+                .setNeighborSize(20)
+                .setPopulationSize(popSize)
+                .setFunctionType(AbstractMOEAD.FunctionType.TCHE)
+                .setDataDirectory("MOEAD_Weights")
+                .build();
+    }
+
     @Override
     public Algorithm cofigure(Problem<Solution<?>> problem, int popSize, int generations) {
 
@@ -133,11 +158,15 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                     builder.addAlgorithm(configureCOMOEADSTM(problem, popSize));
                     algs += "MOEADSTM";
                     break;
+                case COMOEADSTM1:
+                    builder.addAlgorithm(configureCOMOEADSTM1(problem, popSize));
+                    algs += "MOEADSTM1";
+                    break;
             }
         }
 
         COMOEA algorithm = builder.build();
-        algorithm.setName("COMOEA(" + algs+")");
+        algorithm.setName("COMOEA(" + algs + ")");
         return algorithm;
     }
 
