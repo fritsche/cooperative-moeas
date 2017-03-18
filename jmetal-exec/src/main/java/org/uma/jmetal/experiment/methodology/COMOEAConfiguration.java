@@ -166,7 +166,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         }
 
         COMOEA algorithm = builder.build();
-        algorithm.setName("COMOEA(" + algs + ")");
+        algorithm.setName("COMOEA-" + algs);
         return algorithm;
     }
 
