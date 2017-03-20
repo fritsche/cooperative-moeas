@@ -30,6 +30,8 @@ public class AlgorithmConfigurationFactory {
         switch (algorithm) {
             case "NSGAIII":
                 return new NSGAIIIConfiguration();
+            case "MOEADD":
+                return new MOEADDConfiguration();
             case "MOEADSTM":
                 return new MOEADSTMConfiguration();
             case "COMOEA-MOEADSTM,NSGAIII":
