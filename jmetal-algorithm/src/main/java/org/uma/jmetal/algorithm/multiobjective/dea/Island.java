@@ -28,7 +28,7 @@ import org.uma.jmetal.solution.Solution;
  *
  * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class Island<S extends Solution<?>> implements Runnable {
+public class Island<S extends Solution<?>> extends Thread {
 
     // the thread of this island
     private Thread thread;
@@ -102,16 +102,8 @@ public class Island<S extends Solution<?>> implements Runnable {
         this.neighbors.add(neighbor);
     }
 
-    public IslandAlgorithm getAlgorithm() {
+    public IslandAlgorithm<S> getAlgorithm() {
         return algorithm;
-    }
-
-    public void start() {
-        System.out.println("Starting " + threadName);
-        if (thread == null) {
-            thread = new Thread(this, threadName);
-            thread.start();
-        }
     }
 
     @Override
