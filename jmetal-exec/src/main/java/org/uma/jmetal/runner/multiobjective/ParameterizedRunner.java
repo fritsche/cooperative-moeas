@@ -18,6 +18,7 @@ package org.uma.jmetal.runner.multiobjective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import org.uma.jmetal.experiment.methodology.AlgorithmConfigurationFactory;
 import org.uma.jmetal.problem.multiobjective.UF.UF1;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1;
@@ -247,6 +248,9 @@ public class ParameterizedRunner<Result> extends ExecuteAlgorithms<Solution<?>, 
     }
 
     public static void main(String[] args) {
+        
+        // do not print info
+        JMetalLogger.logger.setLevel(Level.WARNING);
         
         if (args.length != 5) {
             throw new JMetalException("Needed arguments: "
