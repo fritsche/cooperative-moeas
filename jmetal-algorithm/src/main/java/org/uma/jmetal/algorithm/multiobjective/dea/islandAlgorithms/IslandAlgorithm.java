@@ -31,8 +31,6 @@ public interface IslandAlgorithm<S extends Solution<?>> extends Algorithm<List<S
 
     public void setIsland(Island island);
 
-    public void setMigrationFrequency(int frequency);
-
     /**
      * Selection policy on the source island. Select the solutions to send.
      *

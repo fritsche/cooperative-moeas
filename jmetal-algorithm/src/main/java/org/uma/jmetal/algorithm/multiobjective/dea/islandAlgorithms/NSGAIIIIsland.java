@@ -17,9 +17,11 @@
 package org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms;
 
 import java.util.List;
+import java.util.logging.Level;
 import org.uma.jmetal.algorithm.multiobjective.dea.Island;
 import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIII;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.JMetalLogger;
 
 /**
  *
@@ -34,6 +36,7 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
 
     public NSGAIIIIsland(NSGAIIIIslandBuilder builder) {
         super(builder);
+        this.migrationFrequency = builder.getMigrationFrequency();
     }
 
     @Override
@@ -42,18 +45,16 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
     }
 
     @Override
-    public void setMigrationFrequency(int frequency) {
-        this.migrationFrequency = frequency;
-    }
-
-    @Override
     public List<S> selectionPolicy() {
+        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
         return offspringPopulation;
     }
 
     @Override
     public void replacementPolicy() {
-        setPopulation(replacement(getPopulation(), island.getMigrantQueue()));
+        List<S> migrants = island.getMigrantQueue();
+        JMetalLogger.logger.log(Level.INFO, "received migrants: {0}", migrants.size());
+        setPopulation(replacement(getPopulation(), migrants));
     }
 
     @Override

@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.SolutionListUtils;
 
 /**
@@ -41,21 +42,27 @@ public class DEA<S extends Solution<?>> implements Algorithm<List<S>> {
     @Override
     public void run() {
 
-        // start the threads
+        List<Thread> threads = new ArrayList<>();
+
+        // create the threads
         islands.forEach((island) -> {
-            island.start();
+            threads.add(new Thread(island));
+        });
+
+        // start the threads
+        threads.forEach((thread) -> {
+            thread.start();
         });
 
         // wait them to finish
-        islands.forEach((island) -> {
+        threads.forEach((thread) -> {
             try {
-                island.join();
+                thread.join();
             } catch (InterruptedException ex) {
                 Logger.getLogger(DEA.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
-
 
     public void setName(String name) {
         this.name = name;

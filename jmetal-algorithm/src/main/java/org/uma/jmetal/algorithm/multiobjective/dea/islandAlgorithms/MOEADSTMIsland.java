@@ -17,6 +17,7 @@
 package org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms;
 
 import java.util.List;
+import java.util.logging.Level;
 import org.uma.jmetal.algorithm.multiobjective.dea.Island;
 import org.uma.jmetal.algorithm.multiobjective.moead.MOEADSTM1;
 import org.uma.jmetal.operator.CrossoverOperator;
@@ -25,6 +26,7 @@ import org.uma.jmetal.operator.impl.crossover.DifferentialEvolutionCrossover;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.JMetalLogger;
 
 /**
  *
@@ -42,37 +44,36 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
             CrossoverOperator<DoubleSolution> crossover,
             FunctionType functionType, String dataDirectory,
             double neighborhoodSelectionProbability,
-            int maximumNumberOfReplacedSolutions, int neighborSize) {
+            int maximumNumberOfReplacedSolutions, int neighborSize, int migrationFrequency) {
 
         super(problem, populationSize, resultPopulationSize, maxEvaluations,
                 mutation, crossover, functionType, dataDirectory,
                 neighborhoodSelectionProbability,
                 maximumNumberOfReplacedSolutions, neighborSize);
 
-        differentialEvolutionCrossover = (DifferentialEvolutionCrossover) crossoverOperator;
+        this.migrationFrequency = migrationFrequency;
+        this.differentialEvolutionCrossover = (DifferentialEvolutionCrossover) crossoverOperator;
     }
 
     @Override
     public void setIsland(Island island) {
         this.island = island;
     }
-
-    @Override
-    public void setMigrationFrequency(int frequency) {
-        this.migrationFrequency = frequency;
-    }
-
+    
     @Override
     public List<DoubleSolution> selectionPolicy() {
+        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
         return offspringPopulation;
     }
 
     @Override
     public void replacementPolicy() {
         // Combine the parent and the current offspring populations
+        List<DoubleSolution> migrants = island.getMigrantQueue();
+        JMetalLogger.logger.log(Level.INFO, "received migrants: {0}", migrants.size());
         jointPopulation.clear();
         jointPopulation.addAll(population);
-        jointPopulation.addAll(island.getMigrantQueue());
+        jointPopulation.addAll(migrants);
         // selection process
         stmSelection();
     }

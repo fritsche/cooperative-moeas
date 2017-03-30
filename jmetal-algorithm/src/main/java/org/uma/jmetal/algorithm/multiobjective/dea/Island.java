@@ -28,22 +28,23 @@ import org.uma.jmetal.solution.Solution;
  *
  * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class Island<S extends Solution<?>> extends Thread {
+public class Island<S extends Solution<?>> implements Runnable {
 
     // the thread of this island
     private Thread thread;
     // the thread name
     private String threadName;
     // the buffer of Solutions received from other islands
-    private ConcurrentLinkedQueue<S> buffer;
+    private final ConcurrentLinkedQueue<S> buffer;
     // the list of neighbor to send information to
-    private List<Island> neighbors;
+    private final List<Island> neighbors;
     // the algorithm to be executed by the island
     private final IslandAlgorithm algorithm;
 
     public Island(IslandAlgorithm algorithm) {
         this.algorithm = algorithm;
-        this.algorithm.setIsland(this);
+        this.buffer = new ConcurrentLinkedQueue<>();
+        this.neighbors = new ArrayList<>();
     }
 
     public String getThreadName() {

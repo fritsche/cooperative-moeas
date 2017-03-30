@@ -16,33 +16,37 @@
  */
 package org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms;
 
-import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIIIBuilder;
+import org.uma.jmetal.algorithm.multiobjective.moead.MOEADBuilder;
 import org.uma.jmetal.problem.Problem;
+import org.uma.jmetal.solution.DoubleSolution;
 
 /**
  *
  * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class NSGAIIIIslandBuilder extends NSGAIIIBuilder {
+public class MOEADSTMIslandBuilder extends MOEADBuilder {
 
     private int migrationFrequency = 1;
 
-    public NSGAIIIIslandBuilder(Problem problem) {
-        super(problem);
-    }
-
-    @Override
-    public NSGAIIIIsland build() {
-        return new NSGAIIIIsland<>(this);
+    public MOEADSTMIslandBuilder(Problem<DoubleSolution> problem) {
+        super(problem, null);
     }
 
     public int getMigrationFrequency() {
         return this.migrationFrequency;
     }
 
-    public NSGAIIIBuilder setMigrationFrequency(int migrationFrequency) {
+    public MOEADSTMIslandBuilder setMigrationFrequency(int migrationFrequency) {
         this.migrationFrequency = migrationFrequency;
         return this;
+    }
+
+    @Override
+    public MOEADSTMIsland build() {
+        return new MOEADSTMIsland(problem, populationSize, resultPopulationSize,
+                maxEvaluations, mutation, crossover, functionType,
+                dataDirectory, neighborhoodSelectionProbability,
+                maximumNumberOfReplacedSolutions, neighborSize, migrationFrequency);
     }
 
 }
