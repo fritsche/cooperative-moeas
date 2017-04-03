@@ -40,7 +40,7 @@ public class AlgorithmConfigurationFactory {
                 return new MOEADSTM1Configuration();
             case "COMOEA-MOEADSTM1,NSGAIII":
                 return new COMOEAConfiguration(APPROACH.SPLIT_POPULATION, SUB_ALGORITHM.COMOEADSTM1, SUB_ALGORITHM.CONSGAIII);
-            case "dEA":
+            case "NSGAIII+MOEADSTM":
                 return new DEAConfiguration();
             default:
                 throw new JMetalException("There is no configurations for " + algorithm + " algorithm");
