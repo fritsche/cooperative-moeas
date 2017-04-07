@@ -83,7 +83,7 @@ public class Island<S extends Solution<?>> implements Runnable {
      * @param migrant solution from other island
      */
     public void migrateSolution(S migrant) {
-        buffer.offer(migrant);
+        buffer.offer((S) migrant.copy());
     }
 
     /**

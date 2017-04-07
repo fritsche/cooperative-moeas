@@ -42,6 +42,10 @@ public class AlgorithmConfigurationFactory {
                 return new COMOEAConfiguration(APPROACH.SPLIT_POPULATION, SUB_ALGORITHM.COMOEADSTM1, SUB_ALGORITHM.CONSGAIII);
             case "NSGAIII+MOEADSTM":
                 return new DEAConfiguration();
+            case "COMOEAv2": // fixed missing call to Solution.copy()
+                return new COMOEAConfigurationV2(APPROACH.SPLIT_POPULATION, SUB_ALGORITHM.COMOEADSTM1, SUB_ALGORITHM.CONSGAIII);
+            case "dEAv2": // fixed missing call to Solution.copy()
+                return new DEAConfigurationV2();
             default:
                 throw new JMetalException("There is no configurations for " + algorithm + " algorithm");
         }

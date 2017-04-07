@@ -109,7 +109,11 @@ public class COMOEA<S extends Solution<?>> implements Algorithm<List<S>> {
                     joint.addAll(offspring);
                 });
                 for (int alg = 0; alg < algorithms.size(); ++alg) {
-                    offspringPopulation.set(alg, joint);
+                    List<S> aux = new ArrayList<>();
+                    joint.forEach((s) -> {
+                        aux.add((S) s.copy());
+                    });
+                    offspringPopulation.set(alg, aux);
                 }
             }
 
