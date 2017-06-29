@@ -39,24 +39,19 @@ import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
 
+import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
+import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
+
 /**
  *
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> {
-
-    public enum SUB_ALGORITHM {
-        CONSGAIII, COMOEADSTM, COMOEADSTM1
-    };
-
-    public enum APPROACH {
-        SPLIT_POPULATION, SPLIT_ITERATIONS
-    };
+public class COMOEAConfigurationV2 implements AlgorithmConfiguration<Solution<?>> {
 
     private final List<SUB_ALGORITHM> subAlgorithms;
     private final APPROACH approach;
 
-    public COMOEAConfiguration(APPROACH approach, SUB_ALGORITHM... subAlgorithms) {
+    public COMOEAConfigurationV2(APPROACH approach, SUB_ALGORITHM... subAlgorithms) {
         this.subAlgorithms = Arrays.asList(subAlgorithms);
         this.approach = approach;
     }
@@ -166,7 +161,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         }
 
         COMOEA algorithm = builder.build();
-        algorithm.setName("COMOEA-" + algs);
+        algorithm.setName("COMOEAv2");
         return algorithm;
     }
 

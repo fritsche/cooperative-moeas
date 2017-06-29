@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.uma.jmetal.experiment.methodology.AlgorithmConfiguration;
-import org.uma.jmetal.experiment.methodology.COMOEAConfiguration;
-import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
-import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
+import org.uma.jmetal.experiment.methodology.DEAConfiguration;
 import org.uma.jmetal.experiment.methodology.MOEADSTM1Configuration;
 import org.uma.jmetal.experiment.methodology.NSGAIIIConfiguration;
 import org.uma.jmetal.experiment.methodology.NSGAIIIMethodology;
@@ -32,7 +30,7 @@ import org.uma.jmetal.experiment.methodology.NSGAIIIMethodology;
  *
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class COMOEAStudy4 {
+public class DEAStudy {
 
     public static void main(String[] args) throws IOException {
 
@@ -42,7 +40,7 @@ public class COMOEAStudy4 {
         if (args.length != 3) {
             System.err.println("WARNING: executing with default values");
             experimentBaseDirectory = "teste";
-            experimentName = "COMOEA";
+            experimentName = "DEA";
             m = 3;
         } else {
             experimentBaseDirectory = args[0];
@@ -50,12 +48,9 @@ public class COMOEAStudy4 {
             m = Integer.parseInt(args[2]);
         }
         List<AlgorithmConfiguration> configurations = new ArrayList<>();
-        configurations.add(new NSGAIIIConfiguration());
-        configurations.add(new MOEADSTM1Configuration());
-        configurations.add(new COMOEAConfiguration(APPROACH.SPLIT_POPULATION,
-                SUB_ALGORITHM.COMOEADSTM1,
-                SUB_ALGORITHM.CONSGAIII
-        ));
+//        configurations.add(new NSGAIIIConfiguration());
+//        configurations.add(new MOEADSTM1Configuration());
+        configurations.add(new DEAConfiguration());
 
         new NSGAIIIMethodology().execute(experimentBaseDirectory, experimentName, m, configurations);
 

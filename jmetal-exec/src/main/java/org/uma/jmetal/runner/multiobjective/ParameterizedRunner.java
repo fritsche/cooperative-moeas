@@ -18,7 +18,9 @@ package org.uma.jmetal.runner.multiobjective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import org.uma.jmetal.experiment.methodology.AlgorithmConfigurationFactory;
+import org.uma.jmetal.problem.multiobjective.UF.UF1;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3;
@@ -82,6 +84,8 @@ public class ParameterizedRunner<Result> extends ExecuteAlgorithms<Solution<?>, 
                 k = 2 * (m - 1);
                 problemList.add(new ExperimentProblem<>(new WFG7(k, 20, m)));
                 break;
+            case "UF1":
+                problemList.add(new ExperimentProblem<>(new UF1()));
             default:
                 throw new JMetalException("There is no configurations for " + problem + " problem");
         }
@@ -244,7 +248,10 @@ public class ParameterizedRunner<Result> extends ExecuteAlgorithms<Solution<?>, 
     }
 
     public static void main(String[] args) {
-
+        
+        // do not print info
+        JMetalLogger.logger.setLevel(Level.WARNING);
+        
         if (args.length != 5) {
             throw new JMetalException("Needed arguments: "
                     + "experimentBaseDirectory algorithm problem m id");
