@@ -215,8 +215,8 @@ public class MOEADBuilder implements AlgorithmBuilder<AbstractMOEAD<DoubleSoluti
                     crossover, functionType, dataDirectory, neighborhoodSelectionProbability,
                     maximumNumberOfReplacedSolutions, neighborSize);
         } else if (moeadVariant.equals(Variant.MOEADD)) {
-            algorithm = new MOEADD(problem, populationSize, resultPopulationSize, maxEvaluations, mutation,
-                    crossover, functionType, dataDirectory, neighborhoodSelectionProbability,
+            algorithm = new MOEADD(problem, populationSize, resultPopulationSize, maxEvaluations, crossover, mutation,
+                    functionType, dataDirectory, neighborhoodSelectionProbability,
                     maximumNumberOfReplacedSolutions, neighborSize);
         }
 
