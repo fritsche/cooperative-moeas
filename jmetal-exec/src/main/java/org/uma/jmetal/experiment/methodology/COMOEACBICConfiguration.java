@@ -21,12 +21,10 @@ import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.comoea.COMOEA;
 import org.uma.jmetal.algorithm.multiobjective.comoea.COMOEABuilder;
-import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTM;
-import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTM1;
-import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTM1Builder;
-import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADSTMBuilder;
 import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.CONSGAIII;
+import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADD;
 import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.CONSGAIIIBuilder;
+import org.uma.jmetal.algorithm.multiobjective.comoea.cooperativeAlgorithms.COMOEADDBuilder;
 import org.uma.jmetal.algorithm.multiobjective.moead.AbstractMOEAD;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
@@ -39,24 +37,19 @@ import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
 
+import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
+import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
+
 /**
  *
  * @author Gian M. Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> {
-
-    public enum SUB_ALGORITHM {
-        CONSGAIII, COMOEADSTM, COMOEADSTM1, COMOEADD
-    };
-
-    public enum APPROACH {
-        SPLIT_POPULATION, SPLIT_ITERATIONS
-    };
+public class COMOEACBICConfiguration implements AlgorithmConfiguration<Solution<?>> {
 
     private final List<SUB_ALGORITHM> subAlgorithms;
     private final APPROACH approach;
 
-    public COMOEAConfiguration(APPROACH approach, SUB_ALGORITHM... subAlgorithms) {
+    public COMOEACBICConfiguration(APPROACH approach, SUB_ALGORITHM... subAlgorithms) {
         this.subAlgorithms = Arrays.asList(subAlgorithms);
         this.approach = approach;
     }
@@ -83,7 +76,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                 .build();
     }
 
-    public static COMOEADSTM configureCOMOEADSTM(Problem problem, int popSize) {
+    public static COMOEADD configureCOMOEADD(Problem problem, int popSize) {
         MutationOperator<DoubleSolution> mutation;
         DifferentialEvolutionCrossover crossover;
         double cr = 1.0;
@@ -94,30 +87,7 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
         double mutationDistributionIndex = 20.0;
         mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
 
-        return (COMOEADSTM) new COMOEADSTMBuilder(problem)
-                .setCrossover(crossover)
-                .setMutation(mutation)
-                .setNeighborhoodSelectionProbability(0.9)
-                .setMaximumNumberOfReplacedSolutions(2)
-                .setNeighborSize(20)
-                .setPopulationSize(popSize)
-                .setFunctionType(AbstractMOEAD.FunctionType.TCHE)
-                .setDataDirectory("MOEAD_Weights")
-                .build();
-    }
-
-    public static COMOEADSTM1 configureCOMOEADSTM1(Problem problem, int popSize) {
-        MutationOperator<DoubleSolution> mutation;
-        DifferentialEvolutionCrossover crossover;
-        double cr = 1.0;
-        double f = 0.5;
-        crossover = new DifferentialEvolutionCrossover(cr, f, "rand/1/bin");
-
-        double mutationProbability = 1.0 / problem.getNumberOfVariables();
-        double mutationDistributionIndex = 20.0;
-        mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
-
-        return (COMOEADSTM1) new COMOEADSTM1Builder(problem)
+        return (COMOEADD) new COMOEADDBuilder(problem)
                 .setCrossover(crossover)
                 .setMutation(mutation)
                 .setNeighborhoodSelectionProbability(0.9)
@@ -154,19 +124,15 @@ public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> 
                     builder.addAlgorithm(configureCONSGAIII(problem, popSize));
                     algs += "NSGAIII";
                     break;
-                case COMOEADSTM:
-                    builder.addAlgorithm(configureCOMOEADSTM(problem, popSize));
-                    algs += "MOEADSTM";
-                    break;
-                case COMOEADSTM1:
-                    builder.addAlgorithm(configureCOMOEADSTM1(problem, popSize));
-                    algs += "MOEADSTM1";
+                case COMOEADD:
+                    builder.addAlgorithm(configureCOMOEADD(problem, popSize));
+                    algs += "MOEADD";
                     break;
             }
         }
 
         COMOEA algorithm = builder.build();
-        algorithm.setName("COMOEA-" + algs);
+        algorithm.setName("COMOEACBIC");
         return algorithm;
     }
 

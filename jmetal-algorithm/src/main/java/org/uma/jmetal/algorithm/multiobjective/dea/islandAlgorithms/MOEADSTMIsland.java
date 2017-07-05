@@ -110,7 +110,7 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
                 evaluations++;
 
                 updateIdealPoint(child);
-                updateNadirPoint((S) child);
+                updateNadirPoint(child);
                 updateNeighborhood(child, subProblemId, neighborType);
 
                 offspringPopulation.add(child);
@@ -138,14 +138,6 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
 
         } while (evaluations < maxEvaluations);
 
-    }
-
-    protected void updateNadirPoint(S individual) {
-        for (int i = 0; i < problem.getNumberOfObjectives(); i++) {
-            if (individual.getObjective(i) > nadirPoint[i]) {
-                nadirPoint[i] = individual.getObjective(i);
-            }
-        }
     }
 
 }
