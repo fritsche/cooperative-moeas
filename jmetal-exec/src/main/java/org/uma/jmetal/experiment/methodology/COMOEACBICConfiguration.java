@@ -29,7 +29,6 @@ import org.uma.jmetal.algorithm.multiobjective.moead.AbstractMOEAD;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
-import org.uma.jmetal.operator.impl.crossover.DifferentialEvolutionCrossover;
 import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
 import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
@@ -78,10 +77,9 @@ public class COMOEACBICConfiguration implements AlgorithmConfiguration<Solution<
 
     public static COMOEADD configureCOMOEADD(Problem problem, int popSize) {
         MutationOperator<DoubleSolution> mutation;
-        DifferentialEvolutionCrossover crossover;
-        double cr = 1.0;
-        double f = 0.5;
-        crossover = new DifferentialEvolutionCrossover(cr, f, "rand/1/bin");
+         double crossoverProbability = 1.0;
+        double crossoverDistributionIndex = 30.0;
+        CrossoverOperator<DoubleSolution> crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
 
         double mutationProbability = 1.0 / problem.getNumberOfVariables();
         double mutationDistributionIndex = 20.0;
