@@ -24,27 +24,10 @@ public class WfgHypervolumeVersion {
   private int currentDeep;
   private int currentDimension;
   private int maxNumberOfPoints;
-  private int maxNumberOfObjectives;
   private Comparator<Point> pointComparator;
 
   public WfgHypervolumeVersion(int dimension, int maxNumberOfPoints) {
-    referencePoint = new ArrayPoint(dimension);
-    for (int i = 0; i < dimension; i++) {
-      referencePoint.setDimensionValue(i, 0.0);
-    }
-
-    maximizing = false;
-    currentDeep = 0;
-    currentDimension = dimension;
-    this.maxNumberOfPoints = maxNumberOfPoints;
-    maxNumberOfObjectives = dimension;
-    pointComparator = new PointComparator();
-
-    int maxd = this.maxNumberOfPoints - (OPT / 2 + 1);
-    fs = new WfgHypervolumeFront[maxd];
-    for (int i = 0; i < maxd; i++) {
-      fs[i] = new WfgHypervolumeFront(maxNumberOfPoints, dimension);
-    }
+    this(dimension, maxNumberOfPoints, new ArrayPoint(dimension));
   }
 
   public WfgHypervolumeVersion(int dimension, int maxNumberOfPoints, Point referencePoint) {
@@ -53,7 +36,6 @@ public class WfgHypervolumeVersion {
     currentDeep = 0;
     currentDimension = dimension;
     this.maxNumberOfPoints = maxNumberOfPoints;
-    maxNumberOfObjectives = dimension;
     pointComparator = new PointComparator();
 
     int maxd = this.maxNumberOfPoints - (OPT / 2 + 1);
@@ -69,7 +51,6 @@ public class WfgHypervolumeVersion {
     hv = Math.abs((front.getPoint(0).getDimensionValue(0) - referencePoint.getDimensionValue(0)) *
         (front.getPoint(0).getDimensionValue(1) - referencePoint.getDimensionValue(1))) ;
 
-    int v = front.getNumberOfPoints() ;
     for (int i = 1; i < front.getNumberOfPoints(); i++) {
       hv += Math.abs((front.getPoint(i).getDimensionValue(0) - referencePoint.getDimensionValue(0)) *
           (front.getPoint(i).getDimensionValue(1) - front.getPoint(i - 1).getDimensionValue(1)));
@@ -133,7 +114,6 @@ public class WfgHypervolumeVersion {
         Point point1 = front.getPoint(p) ;
         Point point2 = front.getPoint(p + 1 + i) ;
         double worseValue = worse(point1.getDimensionValue(j), point2.getDimensionValue(j), false) ;
-        int cd = currentDeep ;
         Point point3 = fs[currentDeep].getPoint(i) ;
         point3.setDimensionValue(j, worseValue);
       }
