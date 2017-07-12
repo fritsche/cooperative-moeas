@@ -48,6 +48,8 @@ public class AlgorithmConfigurationFactory {
                 return new DEAConfigurationV2();
             case "COMOEACBIC": // replace MOEA/D-STM by MOEA/DD
                 return new COMOEACBICConfiguration(APPROACH.SPLIT_ITERATIONS, SUB_ALGORITHM.COMOEADD, SUB_ALGORITHM.CONSGAIII);
+            case "AsyncHeDi": // asynchrohous dEA (NSGA-III, MOEA/DD)
+                return new AsyncHeDiConfiguration();
             default:
                 throw new JMetalException("There is no configurations for " + algorithm + " algorithm");
         }

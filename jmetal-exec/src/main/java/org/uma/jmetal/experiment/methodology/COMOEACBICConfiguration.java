@@ -89,10 +89,10 @@ public class COMOEACBICConfiguration implements AlgorithmConfiguration<Solution<
                 .setCrossover(crossover)
                 .setMutation(mutation)
                 .setNeighborhoodSelectionProbability(0.9)
-                .setMaximumNumberOfReplacedSolutions(2)
+                .setMaximumNumberOfReplacedSolutions(1)
                 .setNeighborSize(20)
                 .setPopulationSize(popSize)
-                .setFunctionType(AbstractMOEAD.FunctionType.TCHE)
+                .setFunctionType(AbstractMOEAD.FunctionType.PBI)
                 .setDataDirectory("MOEAD_Weights")
                 .build();
     }

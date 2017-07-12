@@ -21,7 +21,6 @@ import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.moead.AbstractMOEAD;
 import org.uma.jmetal.algorithm.multiobjective.moead.MOEADBuilder;
 import org.uma.jmetal.operator.CrossoverOperator;
-import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
 import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
@@ -55,9 +54,9 @@ public class MOEADDConfiguration implements AlgorithmConfiguration<DoubleSolutio
                 .setPopulationSize(popSize)
                 .setResultPopulationSize(popSize)
                 .setNeighborhoodSelectionProbability(0.9)
-                .setMaximumNumberOfReplacedSolutions(2)
+                .setMaximumNumberOfReplacedSolutions(1)
                 .setNeighborSize(20)
-                .setFunctionType(AbstractMOEAD.FunctionType.TCHE)
+                .setFunctionType(AbstractMOEAD.FunctionType.PBI)
                 .setDataDirectory("MOEAD_Weights")
                 .build();
     }
