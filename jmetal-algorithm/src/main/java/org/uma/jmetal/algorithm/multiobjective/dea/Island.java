@@ -19,8 +19,14 @@ package org.uma.jmetal.algorithm.multiobjective.dea;
 import java.util.ArrayList;
 import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.IslandAlgorithm;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CyclicBarrier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.MOEADDIsland;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.JMetalLogger;
 
 /**
  * Generic island that executes an IslandAlgorithm. The generic island is
@@ -41,10 +47,27 @@ public class Island<S extends Solution<?>> implements Runnable {
     // the algorithm to be executed by the island
     private final IslandAlgorithm algorithm;
 
+    private CyclicBarrier barrier = null;
+
     public Island(IslandAlgorithm algorithm) {
         this.algorithm = algorithm;
         this.buffer = new ConcurrentLinkedQueue<>();
         this.neighbors = new ArrayList<>();
+    }
+
+    public void setBarrier(CyclicBarrier barrier) {
+        this.barrier = barrier;
+    }
+
+    public void await() {
+        if (barrier != null) {
+            try {
+                int index = barrier.await();
+                JMetalLogger.logger.log(Level.INFO, "island index: {0}", index);
+            } catch (InterruptedException | BrokenBarrierException ex) {
+                Logger.getLogger(MOEADDIsland.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public String getThreadName() {

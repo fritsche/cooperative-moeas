@@ -19,6 +19,7 @@ package org.uma.jmetal.experiment.methodology;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
+import org.uma.jmetal.algorithm.multiobjective.dea.DEA.VERSION;
 
 /**
  *
@@ -49,7 +50,9 @@ public class AlgorithmConfigurationFactory {
             case "COMOEACBIC": // replace MOEA/D-STM by MOEA/DD
                 return new COMOEACBICConfiguration(APPROACH.SPLIT_ITERATIONS, SUB_ALGORITHM.COMOEADD, SUB_ALGORITHM.CONSGAIII);
             case "AsyncHeDi": // asynchrohous dEA (NSGA-III, MOEA/DD)
-                return new AsyncHeDiConfiguration();
+                return new HeDiConfiguration(VERSION.ASYNC);
+            case "SyncHeDi": // asynchrohous dEA (NSGA-III, MOEA/DD)
+                return new HeDiConfiguration(VERSION.SYNC);
             default:
                 throw new JMetalException("There is no configurations for " + algorithm + " algorithm");
         }

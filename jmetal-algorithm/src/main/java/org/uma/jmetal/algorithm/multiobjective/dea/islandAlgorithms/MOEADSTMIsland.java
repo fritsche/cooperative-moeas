@@ -125,6 +125,7 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
             stmSelection();
 
             if (generation % migrationFrequency == 0) {
+                island.await();
                 // send solutions
                 island.sendSolutions(selectionPolicy());
                 // receive solutions

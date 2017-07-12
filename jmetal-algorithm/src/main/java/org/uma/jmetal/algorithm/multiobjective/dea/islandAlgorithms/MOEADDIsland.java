@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.uma.jmetal.algorithm.multiobjective.dea.Island;
 import org.uma.jmetal.algorithm.multiobjective.moead.MOEADD;
 import org.uma.jmetal.algorithm.multiobjective.moead.util.MOEADUtils;
@@ -70,13 +72,13 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
     public void replacementPolicy() {
         List<DoubleSolution> migrants = island.getMigrantQueue();
         JMetalLogger.logger.log(Level.INFO, "received migrants: {0}", migrants.size());
-        
-        for (DoubleSolution migrant: migrants) {
+
+        for (DoubleSolution migrant : migrants) {
             updateIdealPoint(migrant);
             updateNadirPoint(migrant);
             updateArchive(migrant);
         }
-        
+
     }
 
     @Override
@@ -153,18 +155,21 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
                 updateIdealPoint(child);
                 updateNadirPoint(child);
                 updateArchive(child);
-                
+
                 // keep the generated offspring to send
                 offspringPopulation.add(child);
-                
+
                 // convert migrationFrequency from iterations to FEs before compare
-                if ( evaluations % (migrationFrequency * populationSize) == 0) {
-                // send solutions
-                island.sendSolutions(selectionPolicy());
-                // receive solutions
-                replacementPolicy();
-            }
-                
+                if (evaluations % (migrationFrequency * populationSize) == 0) {
+
+                    island.await();
+
+                    // send solutions
+                    island.sendSolutions(selectionPolicy());
+                    // receive solutions
+                    replacementPolicy();
+                }
+
                 //System.out.println(evaluations);
             } // for
         } while (evaluations < maxEvaluations);

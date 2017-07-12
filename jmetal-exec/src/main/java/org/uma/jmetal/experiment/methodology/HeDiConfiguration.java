@@ -39,10 +39,12 @@ import org.uma.jmetal.solution.DoubleSolution;
  *
  * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
  */
-public class AsyncHeDiConfiguration implements AlgorithmConfiguration {
+public class HeDiConfiguration implements AlgorithmConfiguration {
 
-    public AsyncHeDiConfiguration() {
+    private DEA.VERSION version;
 
+    HeDiConfiguration(DEA.VERSION version) {
+        this.version = version;
     }
 
     public NSGAIIIIsland configureNSGAIIIIsland(Problem problem, int popSize, int iterations) {
@@ -132,6 +134,9 @@ public class AsyncHeDiConfiguration implements AlgorithmConfiguration {
         // * 3. Add the islands to the dEA algorithm;
         builder.addIsland(moeadd);
         builder.addIsland(nsgaiii);
+        
+        builder.setVersion(version);
+        
         DEA dea = builder.build();
         dea.setName("AsyncHeDi");
         return dea;
