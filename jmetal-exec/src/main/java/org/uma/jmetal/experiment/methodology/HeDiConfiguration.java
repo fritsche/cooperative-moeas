@@ -19,6 +19,7 @@ package org.uma.jmetal.experiment.methodology;
 import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.dea.DEA;
+import org.uma.jmetal.algorithm.multiobjective.dea.DEA.VERSION;
 import org.uma.jmetal.algorithm.multiobjective.dea.DEABuilder;
 import org.uma.jmetal.algorithm.multiobjective.dea.Island;
 import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.MOEADDIsland;
@@ -85,12 +86,11 @@ public class HeDiConfiguration implements AlgorithmConfiguration {
         mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
 
         MOEADDIslandBuilder builder = new MOEADDIslandBuilder(problem);
-       
+
         //problem, populationSize, resultPopulationSize,
 //                maxEvaluations, mutation, crossover, functionType,
 //                dataDirectory, neighborhoodSelectionProbability,
 //                maximumNumberOfReplacedSolutions, neighborSize, migrationFrequency
-        
         builder.setCrossover(crossover)
                 .setMutation(mutation)
                 .setMaxEvaluations(generations * popSize)
@@ -114,16 +114,15 @@ public class HeDiConfiguration implements AlgorithmConfiguration {
 
         int numberofislands = 2; // nsgaiii + moeadd
 
-           // we do not split population anymore
+        // we do not split population anymore
 //        popSize = (int) Math.ceil((double) popSize / numberofislands);
-
         // instead we split the generations
         int islandGenerations = generations / numberofislands;
 
         // * 1. Build each island; 
         Island moeadd = new Island(configureMOEADDIsland(problem, popSize, islandGenerations));
         moeadd.getAlgorithm().setIsland(moeadd);
-        
+
         Island nsgaiii = new Island(configureNSGAIIIIsland(problem, popSize, islandGenerations));
         nsgaiii.getAlgorithm().setIsland(nsgaiii);
 
@@ -134,11 +133,13 @@ public class HeDiConfiguration implements AlgorithmConfiguration {
         // * 3. Add the islands to the dEA algorithm;
         builder.addIsland(moeadd);
         builder.addIsland(nsgaiii);
-        
+
         builder.setVersion(version);
-        
+
         DEA dea = builder.build();
-        dea.setName("AsyncHeDi");
+
+        dea.setName((version == VERSION.ASYNC) ? ("AsyncHeDi") : ("SyncHeDi"));
+
         return dea;
 
     }

@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.uma.jmetal.algorithm.multiobjective.dea.Island;
 import org.uma.jmetal.algorithm.multiobjective.moead.MOEADD;
 import org.uma.jmetal.algorithm.multiobjective.moead.util.MOEADUtils;
@@ -162,10 +160,11 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
                 // convert migrationFrequency from iterations to FEs before compare
                 if (evaluations % (migrationFrequency * populationSize) == 0) {
 
-                    island.await();
-
                     // send solutions
                     island.sendSolutions(selectionPolicy());
+                    
+                    island.await();
+                    
                     // receive solutions
                     replacementPolicy();
                 }

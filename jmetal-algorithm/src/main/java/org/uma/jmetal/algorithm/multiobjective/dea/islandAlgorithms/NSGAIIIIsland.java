@@ -70,9 +70,11 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
             setPopulation(replacement(getPopulation(), offspringPopulation));
 
             if (iterations % migrationFrequency == 0) {
-                island.await();
                 // send solutions
                 island.sendSolutions(selectionPolicy());
+                
+                island.await();
+                
                 // receive solutions
                 replacementPolicy();
             }

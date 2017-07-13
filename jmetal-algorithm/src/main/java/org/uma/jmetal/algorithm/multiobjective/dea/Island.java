@@ -62,8 +62,9 @@ public class Island<S extends Solution<?>> implements Runnable {
     public void await() {
         if (barrier != null) {
             try {
+                JMetalLogger.logger.log(Level.INFO, "island waiting: {0}", barrier.getNumberWaiting());
                 int index = barrier.await();
-                JMetalLogger.logger.log(Level.INFO, "island index: {0}", index);
+                JMetalLogger.logger.log(Level.INFO, "island executing: {0}", index);
             } catch (InterruptedException | BrokenBarrierException ex) {
                 Logger.getLogger(MOEADDIsland.class.getName()).log(Level.SEVERE, null, ex);
             }
