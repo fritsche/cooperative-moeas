@@ -46,6 +46,8 @@ public class Island<S extends Solution<?>> implements Runnable {
     private final List<Island> neighbors;
     // the algorithm to be executed by the island
     private final IslandAlgorithm algorithm;
+    
+    private boolean acceptingMigrants = true;
 
     private CyclicBarrier barrier = null;
 
@@ -71,6 +73,14 @@ public class Island<S extends Solution<?>> implements Runnable {
         }
     }
 
+    public boolean isAcceptingMigrants() {
+        return acceptingMigrants;
+    }
+
+    public void setAcceptingMigrants(boolean acceptingMigrants) {
+        this.acceptingMigrants = acceptingMigrants;
+    }
+    
     public String getThreadName() {
         return threadName;
     }
@@ -107,7 +117,10 @@ public class Island<S extends Solution<?>> implements Runnable {
      * @param migrant solution from other island
      */
     public void migrateSolution(S migrant) {
-        buffer.offer((S) migrant.copy());
+        if (isAcceptingMigrants()) {
+            buffer.offer((S) migrant.copy());
+        }
+//        JMetalLogger.logger.log(Level.INFO, "buffer size: {0}", buffer.size());
     }
 
     /**

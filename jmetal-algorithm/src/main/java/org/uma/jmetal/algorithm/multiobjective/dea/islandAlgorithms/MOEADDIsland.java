@@ -172,6 +172,8 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
                 //System.out.println(evaluations);
             } // for
         } while (evaluations < maxEvaluations);
+        
+         island.setAcceptingMigrants(false);
     }
 
 }

@@ -29,6 +29,8 @@ public class AlgorithmConfigurationFactory {
 
     public static AlgorithmConfiguration getAlgorithmConfiguration(String algorithm) {
         switch (algorithm) {
+            case "NSGAII":
+                return new NSGAIIConfiguration();
             case "NSGAIII":
                 return new NSGAIIIConfiguration();
             case "MOEADD":

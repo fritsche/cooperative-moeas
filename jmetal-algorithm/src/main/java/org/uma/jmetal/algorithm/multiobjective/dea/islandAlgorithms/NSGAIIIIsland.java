@@ -23,14 +23,10 @@ import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIII;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
 
-/**
- *
- * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
- */
 public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements IslandAlgorithm<S> {
 
     private Island island;
-    private int migrationFrequency;
+    private final int migrationFrequency;
     private List<S> offspringPopulation;
     private List<S> matingPopulation;
 
@@ -81,5 +77,7 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
 
             updateProgress();
         }
+        
+        island.setAcceptingMigrants(false);
     }
 }

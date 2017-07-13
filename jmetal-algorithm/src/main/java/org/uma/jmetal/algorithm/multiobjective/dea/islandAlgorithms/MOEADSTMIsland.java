@@ -28,14 +28,10 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
 
-/**
- *
- * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
- */
 public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements IslandAlgorithm<DoubleSolution> {
 
     private Island island;
-    private int migrationFrequency;
+    private final int migrationFrequency;
     private final DifferentialEvolutionCrossover differentialEvolutionCrossover;
 
     public MOEADSTMIsland(Problem<DoubleSolution> problem, int populationSize,
@@ -125,9 +121,11 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
             stmSelection();
 
             if (generation % migrationFrequency == 0) {
-                island.await();
                 // send solutions
                 island.sendSolutions(selectionPolicy());
+                
+                island.await();
+                
                 // receive solutions
                 replacementPolicy();
             }
@@ -139,6 +137,7 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
 
         } while (evaluations < maxEvaluations);
 
+        island.setAcceptingMigrants(false);
     }
 
 }
