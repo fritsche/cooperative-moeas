@@ -24,9 +24,9 @@ public class COMOEADD<S extends Solution<?>> extends MOEADD<DoubleSolution> impl
 
         population = new ArrayList(populationSize);
 
-        rankSolution = new HashMap<>();
-        associateDistSolution = new HashMap();
-        regionSolution = new HashMap();
+//        rankSolution = new HashMap<>();
+//        associateDistSolution = new HashMap();
+//        regionSolution = new HashMap();
 
         neighborhood = new int[populationSize][neighborSize];
         lambda = new double[populationSize][problem.getNumberOfObjectives()];
@@ -51,7 +51,7 @@ public class COMOEADD<S extends Solution<?>> extends MOEADD<DoubleSolution> impl
             subregionDist[i][i] = distance;
         }
 
-        Ranking ranking = computeRanking(population);
+       ranking = computeRanking(population);
         for (int curRank = 0; curRank < ranking.getNumberOfSubfronts(); curRank++) {
             List<Solution> front = ranking.getSubfront(curRank);
             for (Solution s : front) {

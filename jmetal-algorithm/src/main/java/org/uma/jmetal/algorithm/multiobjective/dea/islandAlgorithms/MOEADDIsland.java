@@ -60,7 +60,7 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
 
     @Override
     public List<DoubleSolution> selectionPolicy() {
-        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
+//        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
         List<DoubleSolution> migration = new ArrayList(offspringPopulation);
         offspringPopulation.clear();
         return migration;
@@ -84,10 +84,9 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
         evaluations = 0;
         population = new ArrayList(populationSize);
 
-        rankSolution = new HashMap<>();
-        associateDistSolution = new HashMap();
-        regionSolution = new HashMap();
-
+//        rankSolution = new HashMap<>();
+//        associateDistSolution = new HashMap();
+//        regionSolution = new HashMap();
         neighborhood = new int[populationSize][neighborSize];
         lambda = new double[populationSize][problem.getNumberOfObjectives()];
 
@@ -113,7 +112,7 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
             subregionDist[i][i] = distance;
         }
 
-        Ranking ranking = computeRanking(population);
+        ranking = computeRanking(population);
         for (int curRank = 0; curRank < ranking.getNumberOfSubfronts(); curRank++) {
             List<Solution> front = ranking.getSubfront(curRank);
             for (Solution s : front) {
@@ -158,14 +157,15 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
                 offspringPopulation.add(child);
 
                 // convert migrationFrequency from iterations to FEs before compare
-                if (evaluations % (migrationFrequency * populationSize) == 0) {
+                 if (evaluations % (migrationFrequency * populationSize) == 0) {
+//                if (evaluations % migrationFrequency == 0) {
 
-                    JMetalLogger.logger.log(Level.INFO, "iteration: {0}", evaluations / populationSize );
+//                    JMetalLogger.logger.log(Level.INFO, "iteration: {0}", evaluations / populationSize );
                     // send solutions
                     island.sendSolutions(selectionPolicy());
-                    
+
                     island.await();
-                    
+
                     // receive solutions
                     replacementPolicy();
                 }
@@ -173,8 +173,8 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
                 //System.out.println(evaluations);
             } // for
         } while (evaluations < maxEvaluations);
-        
-         island.setAcceptingMigrants(false);
+
+        island.setAcceptingMigrants(false);
     }
 
 }

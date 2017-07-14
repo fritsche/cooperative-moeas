@@ -42,7 +42,7 @@ import org.uma.jmetal.solution.DoubleSolution;
  */
 public class HeDiConfiguration implements AlgorithmConfiguration {
 
-    private DEA.VERSION version;
+    private final DEA.VERSION version;
 
     HeDiConfiguration(DEA.VERSION version) {
         this.version = version;

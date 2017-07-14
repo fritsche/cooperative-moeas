@@ -250,10 +250,10 @@ public class ParameterizedRunner<Result> extends ExecuteAlgorithms<Solution<?>, 
     public static void main(String[] args) {
         
         // do not print info
-        JMetalLogger.logger.setLevel(Level.WARNING);
+//        JMetalLogger.logger.setLevel(Level.WARNING);
         
-//        JMetalLogger.logger.setLevel(Level.ALL);
-        
+        JMetalLogger.logger.setLevel(Level.ALL);
+                              
         if (args.length != 5) {
             throw new JMetalException("Needed arguments: "
                     + "experimentBaseDirectory algorithm problem m id");
