@@ -49,8 +49,12 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
     @Override
     public void replacementPolicy() {
         List<S> migrants = island.getMigrantQueue();
-        JMetalLogger.logger.log(Level.INFO, "received migrants: {0}", migrants.size());
-        setPopulation(replacement(getPopulation(), migrants));
+        while (! migrants.isEmpty()) {
+            JMetalLogger.logger.log(Level.INFO, "migrants: {0}", migrants.size());
+            List<S> chunk = migrants.subList(0, Math.min(maxPopulationSize, migrants.size()));
+            setPopulation(replacement(getPopulation(), chunk));
+            migrants.subList(0, Math.min(maxPopulationSize, migrants.size())).clear();
+        }
     }
 
     @Override
@@ -66,6 +70,9 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
             setPopulation(replacement(getPopulation(), offspringPopulation));
 
             if (iterations % migrationFrequency == 0) {
+                
+                JMetalLogger.logger.log(Level.INFO, "iteration: {0}", iterations );
+                
                 // send solutions
                 island.sendSolutions(selectionPolicy());
                 

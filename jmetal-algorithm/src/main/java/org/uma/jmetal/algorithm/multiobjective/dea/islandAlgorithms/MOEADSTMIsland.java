@@ -55,7 +55,7 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
     public void setIsland(Island island) {
         this.island = island;
     }
-    
+
     @Override
     public List<DoubleSolution> selectionPolicy() {
         JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
@@ -66,12 +66,16 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
     public void replacementPolicy() {
         // Combine the parent and the current offspring populations
         List<DoubleSolution> migrants = island.getMigrantQueue();
-        JMetalLogger.logger.log(Level.INFO, "received migrants: {0}", migrants.size());
-        jointPopulation.clear();
-        jointPopulation.addAll(population);
-        jointPopulation.addAll(migrants);
-        // selection process
-        stmSelection();
+        while (!migrants.isEmpty()) {
+            JMetalLogger.logger.log(Level.INFO, "migrants: {0}", migrants.size());
+            List<DoubleSolution> chunk = migrants.subList(0, Math.min(populationSize, migrants.size()));
+            jointPopulation.clear();
+            jointPopulation.addAll(population);
+            jointPopulation.addAll(chunk);
+            // selection process
+            stmSelection();
+            migrants.subList(0, Math.min(populationSize, migrants.size())).clear();
+        }
     }
 
     @Override
@@ -123,9 +127,9 @@ public class MOEADSTMIsland<S extends Solution<?>> extends MOEADSTM1 implements 
             if (generation % migrationFrequency == 0) {
                 // send solutions
                 island.sendSolutions(selectionPolicy());
-                
+
                 island.await();
-                
+
                 // receive solutions
                 replacementPolicy();
             }

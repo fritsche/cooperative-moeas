@@ -160,6 +160,7 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
                 // convert migrationFrequency from iterations to FEs before compare
                 if (evaluations % (migrationFrequency * populationSize) == 0) {
 
+                    JMetalLogger.logger.log(Level.INFO, "iteration: {0}", evaluations / populationSize );
                     // send solutions
                     island.sendSolutions(selectionPolicy());
                     
