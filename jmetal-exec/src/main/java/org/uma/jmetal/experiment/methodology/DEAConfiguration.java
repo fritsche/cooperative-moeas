@@ -111,10 +111,10 @@ public class DEAConfiguration implements AlgorithmConfiguration {
         popSize = (int) Math.ceil((double) popSize / numberofislands);
 
         // * 1. Build each island; 
-        Island moeadstm = new Island(configureMOEADSTMIsland(problem, popSize, generations));
+        Island moeadstm = new Island(configureMOEADSTMIsland(problem, popSize, generations), popSize);
         moeadstm.getAlgorithm().setIsland(moeadstm);
         
-        Island nsgaiii = new Island(configureNSGAIIIIsland(problem, popSize, generations));
+        Island nsgaiii = new Island(configureNSGAIIIIsland(problem, popSize, generations), popSize);
         nsgaiii.getAlgorithm().setIsland(nsgaiii);
 
         // * 2. Set the neighborhood; 

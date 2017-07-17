@@ -26,13 +26,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.MOEADDIsland;
 import org.uma.jmetal.solution.Solution;
-import org.uma.jmetal.util.JMetalLogger;
 
 /**
  * Generic island that executes an IslandAlgorithm. The generic island is
  * responsible for handling concurrency.
  *
  * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
+ * @param <S>
  */
 public class Island<S extends Solution<?>> implements Runnable {
 
@@ -42,6 +42,8 @@ public class Island<S extends Solution<?>> implements Runnable {
     private String threadName;
     // the buffer of Solutions received from other islands
     private final ConcurrentLinkedQueue<S> buffer;
+
+    private final int bufferLimit;
     // the list of neighbor to send information to
     private final List<Island> neighbors;
     // the algorithm to be executed by the island
@@ -51,10 +53,11 @@ public class Island<S extends Solution<?>> implements Runnable {
 
     private CyclicBarrier barrier = null;
 
-    public Island(IslandAlgorithm algorithm) {
+    public Island(IslandAlgorithm algorithm, int bufferLimit) {
         this.algorithm = algorithm;
         this.buffer = new ConcurrentLinkedQueue<>();
         this.neighbors = new ArrayList<>();
+        this.bufferLimit = bufferLimit;
     }
 
     public void setBarrier(CyclicBarrier barrier) {
@@ -118,9 +121,14 @@ public class Island<S extends Solution<?>> implements Runnable {
      */
     public void migrateSolution(S migrant) {
         if (isAcceptingMigrants()) {
-            buffer.offer((S) migrant.copy());
-            
-        } 
+            if (buffer.size() + 1 > bufferLimit) { // if the queueLimit will be exceeded
+                S aux = buffer.peek(); // get the head
+                buffer.offer((S) migrant.copy()); // add to tail
+                buffer.remove(aux); // remove the head if exists
+            } else {
+                buffer.offer((S) migrant.copy()); 
+            }
+        }
 //        else { JMetalLogger.logger.log(Level.WARNING, "buffer size: {0}", buffer.size()); }
     }
 

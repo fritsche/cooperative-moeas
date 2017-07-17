@@ -42,7 +42,7 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
 
     @Override
     public List<S> selectionPolicy() {
-//        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
+        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
         return offspringPopulation;
     }
 

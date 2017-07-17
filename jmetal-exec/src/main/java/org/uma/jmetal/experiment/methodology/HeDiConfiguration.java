@@ -120,10 +120,10 @@ public class HeDiConfiguration implements AlgorithmConfiguration {
         int islandGenerations = generations / numberofislands;
 
         // * 1. Build each island; 
-        Island moeadd = new Island(configureMOEADDIsland(problem, popSize, islandGenerations));
+        Island moeadd = new Island(configureMOEADDIsland(problem, popSize, islandGenerations), popSize);
         moeadd.getAlgorithm().setIsland(moeadd);
 
-        Island nsgaiii = new Island(configureNSGAIIIIsland(problem, popSize, islandGenerations));
+        Island nsgaiii = new Island(configureNSGAIIIIsland(problem, popSize, islandGenerations), popSize);
         nsgaiii.getAlgorithm().setIsland(nsgaiii);
 
         // * 2. Set the neighborhood; 

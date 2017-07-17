@@ -60,7 +60,7 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
 
     @Override
     public List<DoubleSolution> selectionPolicy() {
-//        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
+        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
         List<DoubleSolution> migration = new ArrayList(offspringPopulation);
         offspringPopulation.clear();
         return migration;
