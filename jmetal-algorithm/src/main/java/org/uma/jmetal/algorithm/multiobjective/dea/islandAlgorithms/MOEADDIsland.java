@@ -18,7 +18,6 @@ package org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import org.uma.jmetal.algorithm.multiobjective.dea.Island;
@@ -30,13 +29,13 @@ import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
-import org.uma.jmetal.util.solutionattribute.Ranking;
 
 public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> implements IslandAlgorithm<DoubleSolution> {
 
     private Island island;
     private final int migrationFrequency;
-
+    private DoubleSolution child;
+    
     public MOEADDIsland(Problem<DoubleSolution> problem, int populationSize,
             int resultPopulationSize, int maxEvaluations,
             MutationOperator<DoubleSolution> mutation,
@@ -58,14 +57,17 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
         this.island = island;
     }
 
+    /**
+     * Creates a list with the last generated child.
+     */
     @Override
     public List<DoubleSolution> selectionPolicy() {
-        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", offspringPopulation.size());
-        List<DoubleSolution> migration = new ArrayList(offspringPopulation);
-        offspringPopulation.clear();
+        JMetalLogger.logger.log(Level.INFO, "sent migrants: {0}", 1);
+        List<DoubleSolution> migration = new ArrayList();
+        migration.add(child);
         return migration;
     }
-
+    
     @Override
     public void replacementPolicy() {
         List<DoubleSolution> migrants = island.getMigrantQueue();
@@ -101,8 +103,7 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
         initializeUniformWeight();
         initializeNeighborhood();
         initPopulation();
-        // init offspring (MOEADDIsland only)
-        offspringPopulation = new ArrayList<>(populationSize);
+        
         initializeIdealPoint();
         initializeNadirPoint();
 
@@ -143,32 +144,27 @@ public class MOEADDIsland<S extends Solution<?>> extends MOEADD<DoubleSolution> 
 
                 List<DoubleSolution> children = crossoverOperator.execute(parents);
 
-                DoubleSolution child = children.get(0);
+                child = children.get(0);
                 mutationOperator.execute(child);
                 problem.evaluate(child);
 
                 evaluations++;
 
-                updateIdealPoint(child);
-                updateNadirPoint(child);
-                updateArchive(child);
-
-                // keep the generated offspring to send
-                offspringPopulation.add(child);
-
                 // convert migrationFrequency from iterations to FEs before compare
-                 if (evaluations % (migrationFrequency * populationSize) == 0) {
-//                if (evaluations % migrationFrequency == 0) {
-
+//                 if (evaluations % (migrationFrequency * populationSize) == 0) {
+                if (evaluations % migrationFrequency == 0) {
 //                    JMetalLogger.logger.log(Level.INFO, "iteration: {0}", evaluations / populationSize );
                     // send solutions
                     island.sendSolutions(selectionPolicy());
-
+                    // await does nothing
                     island.await();
-
                     // receive solutions
                     replacementPolicy();
                 }
+                
+                updateIdealPoint(child);
+                updateNadirPoint(child);
+                updateArchive(child);
 
                 //System.out.println(evaluations);
             } // for

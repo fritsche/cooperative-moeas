@@ -36,8 +36,6 @@ import org.uma.jmetal.solution.Solution;
  */
 public class Island<S extends Solution<?>> implements Runnable {
 
-    // the thread of this island
-    private Thread thread;
     // the thread name
     private String threadName;
     // the buffer of Solutions received from other islands
@@ -106,7 +104,7 @@ public class Island<S extends Solution<?>> implements Runnable {
     public List<S> getMigrantQueue() {
         List<S> list = new ArrayList<>();
         S aux = getNextMigrant();
-        while (aux != null) {
+        for (int i = 0; i < bufferLimit && aux != null; ++i) {
             list.add(aux);
             aux = getNextMigrant();
         }
@@ -124,9 +122,9 @@ public class Island<S extends Solution<?>> implements Runnable {
             if (buffer.size() + 1 > bufferLimit) { // if the queueLimit will be exceeded
                 S aux = buffer.peek(); // get the head
                 buffer.offer((S) migrant.copy()); // add to tail
-                buffer.remove(aux); // remove the head if exists
+                buffer.remove(aux); // remove the head if it still exists
             } else {
-                buffer.offer((S) migrant.copy()); 
+                buffer.offer((S) migrant.copy());
             }
         }
 //        else { JMetalLogger.logger.log(Level.WARNING, "buffer size: {0}", buffer.size()); }

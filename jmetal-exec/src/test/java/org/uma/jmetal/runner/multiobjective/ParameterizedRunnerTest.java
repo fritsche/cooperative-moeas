@@ -24,7 +24,6 @@
 package org.uma.jmetal.runner.multiobjective;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -39,7 +38,7 @@ public class ParameterizedRunnerTest {
     public void testSomeMethod() {
         String[] args = new String[5];
         args[0] = "Test";
-        args[1] = "AsyncHeDi";
+        args[1] = "BroadcastHeDi";
         args[2] = "WFG7";
         args[3] = "10";
         args[4] = "0";

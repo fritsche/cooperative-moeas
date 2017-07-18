@@ -19,20 +19,28 @@ package org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms;
 import java.util.List;
 import java.util.logging.Level;
 import org.uma.jmetal.algorithm.multiobjective.dea.Island;
-import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIII;
+import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
+import org.uma.jmetal.operator.CrossoverOperator;
+import org.uma.jmetal.operator.MutationOperator;
+import org.uma.jmetal.operator.SelectionOperator;
+import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
+import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
 
-public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements IslandAlgorithm<S> {
+public class NSGAIIIsland<S extends Solution<?>> extends NSGAII<S> implements IslandAlgorithm<S> {
 
     private Island island;
     private final int migrationFrequency;
     private List<S> offspringPopulation;
     private List<S> matingPopulation;
 
-    public NSGAIIIIsland(NSGAIIIIslandBuilder builder) {
-        super(builder);
-        this.migrationFrequency = builder.getMigrationFrequency();
+    public NSGAIIIsland(Problem<S> problem, int maxEvaluations, int populationSize,
+            CrossoverOperator<S> crossoverOperator, MutationOperator<S> mutationOperator,
+            SelectionOperator<List<S>, S> selectionOperator, SolutionListEvaluator<S> evaluator, int migrationFrequency) {
+        super(problem, maxEvaluations, populationSize, crossoverOperator,
+                mutationOperator, selectionOperator, evaluator);
+        this.migrationFrequency = migrationFrequency;
     }
 
     @Override
@@ -63,15 +71,15 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
             matingPopulation = selection(getPopulation());
             offspringPopulation = reproduction(matingPopulation);
             offspringPopulation = evaluatePopulation(offspringPopulation);
-            if (iterations % migrationFrequency == 0) {
-                island.sendSolutions(selectionPolicy());                
+            if (evaluations % (migrationFrequency * maxPopulationSize) == 0) {
+                island.sendSolutions(selectionPolicy());
                 island.await();
                 replacementPolicy();
             }
             setPopulation(replacement(getPopulation(), offspringPopulation));
             updateProgress();
         }
-        
+
         island.setAcceptingMigrants(false);
     }
 }
