@@ -32,7 +32,7 @@ public class BroadcastHeDiConfiguration extends DEAConfiguration {
         Island nsgaiii = new Island(configureNSGAIIIIsland(problem, popSize, islandGenerations), bufferSizeLimit);
         nsgaiii.getAlgorithm().setIsland(nsgaiii);
         
-        Island nsgaii = new Island(configureNSGAIIIsland(problem, popSize, generations), bufferSizeLimit);
+        Island nsgaii = new Island(configureNSGAIIIsland(problem, popSize, islandGenerations), bufferSizeLimit);
         nsgaii.getAlgorithm().setIsland(nsgaii);
 
         // * 2. Set the Broadcast neighborhood; 
