@@ -119,12 +119,9 @@ public class Island<S extends Solution<?>> implements Runnable {
      */
     public void migrateSolution(S migrant) {
         if (isAcceptingMigrants()) {
-            if (buffer.size() + 1 > bufferLimit) { // if the queueLimit will be exceeded
-                S aux = buffer.peek(); // get the head
-                buffer.offer((S) migrant.copy()); // add to tail
-                buffer.remove(aux); // remove the head if it still exists
-            } else {
-                buffer.offer((S) migrant.copy());
+            buffer.offer((S) migrant.copy());
+            if (buffer.size() > bufferLimit) { // if the queueLimit is exceeded
+                buffer.poll();
             }
         }
 //        else { JMetalLogger.logger.log(Level.WARNING, "buffer size: {0}", buffer.size()); }
