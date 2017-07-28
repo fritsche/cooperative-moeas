@@ -33,6 +33,8 @@ public class AlgorithmConfigurationFactory {
                 return new NSGAIIConfiguration();
             case "NSGAIII":
                 return new NSGAIIIConfiguration();
+            case "Yuan":
+                return new YuanConfiguration();
             case "MOEADD":
                 return new MOEADDConfiguration();
             case "MOEADSTM":
