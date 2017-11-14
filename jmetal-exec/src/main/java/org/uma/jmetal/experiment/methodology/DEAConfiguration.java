@@ -21,11 +21,17 @@ import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.dea.DEA;
 import org.uma.jmetal.algorithm.multiobjective.dea.DEABuilder;
 import org.uma.jmetal.algorithm.multiobjective.dea.Island;
+import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.MOEADDIsland;
+import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.MOEADDIslandBuilder;
 import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.MOEADSTMIsland;
 import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.MOEADSTMIslandBuilder;
 import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.NSGAIIIIsland;
 import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.NSGAIIIIslandBuilder;
+import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.NSGAIIIsland;
+import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.NSGAIIIslandBuilder;
 import org.uma.jmetal.algorithm.multiobjective.moead.AbstractMOEAD;
+import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
+import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAIIBuilder;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
@@ -35,6 +41,7 @@ import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
+import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 
 /**
  *
@@ -73,6 +80,33 @@ public class DEAConfiguration implements AlgorithmConfiguration {
 
     }
 
+    public NSGAIIIsland configureNSGAIIIsland(Problem problem, int popSize, int generations) {
+        // make popSize divisible by 2
+        popSize = (((popSize + 1) / 2) * 2);
+
+        CrossoverOperator<DoubleSolution> crossover;
+        MutationOperator<DoubleSolution> mutation;
+        SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
+        double crossoverProbability = 0.9;
+        double crossoverDistributionIndex = 20.0;
+        crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
+
+        double mutationProbability = 1.0 / problem.getNumberOfVariables();
+        double mutationDistributionIndex = 20.0;
+        mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
+
+        selection = new BinaryTournamentSelection<>(
+                new RankingAndCrowdingDistanceComparator<>());
+
+        NSGAIIIslandBuilder builder = new NSGAIIIslandBuilder(problem, crossover, mutation);
+
+        builder.setSelectionOperator(selection)
+                .setMaxEvaluations(generations * popSize)
+                .setPopulationSize(popSize);
+        builder.setMigrationFrequency(1);
+        return builder.build();
+    }
+
     public MOEADSTMIsland configureMOEADSTMIsland(Problem problem, int popSize, int generations) {
         MutationOperator<DoubleSolution> mutation;
         DifferentialEvolutionCrossover crossover;
@@ -101,6 +135,34 @@ public class DEAConfiguration implements AlgorithmConfiguration {
 
     }
 
+    public MOEADDIsland configureMOEADDIsland(Problem problem, int popSize, int generations) {
+        MutationOperator<DoubleSolution> mutation;
+        double crossoverProbability = 1.0;
+        double crossoverDistributionIndex = 30.0;
+        CrossoverOperator<DoubleSolution> crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
+
+        double mutationProbability = 1.0 / problem.getNumberOfVariables();
+        double mutationDistributionIndex = 20.0;
+        mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
+
+        MOEADDIslandBuilder builder = new MOEADDIslandBuilder(problem);
+
+        builder.setCrossover(crossover)
+                .setMutation(mutation)
+                .setMaxEvaluations(generations * popSize)
+                .setNeighborhoodSelectionProbability(0.9)
+                .setMaximumNumberOfReplacedSolutions(1)
+                .setNeighborSize(20)
+                .setPopulationSize(popSize)
+                .setFunctionType(AbstractMOEAD.FunctionType.PBI)
+                .setDataDirectory("MOEAD_Weights")
+                .build();
+
+        builder.setMigrationFrequency(1); // 1 times population size
+        return builder.build();
+
+    }
+
     @Override
     public Algorithm cofigure(Problem problem, int popSize, int generations) {
 
@@ -111,10 +173,10 @@ public class DEAConfiguration implements AlgorithmConfiguration {
         popSize = (int) Math.ceil((double) popSize / numberofislands);
 
         // * 1. Build each island; 
-        Island moeadstm = new Island(configureMOEADSTMIsland(problem, popSize, generations));
+        Island moeadstm = new Island(configureMOEADSTMIsland(problem, popSize, generations), popSize);
         moeadstm.getAlgorithm().setIsland(moeadstm);
-        
-        Island nsgaiii = new Island(configureNSGAIIIIsland(problem, popSize, generations));
+
+        Island nsgaiii = new Island(configureNSGAIIIIsland(problem, popSize, generations), popSize);
         nsgaiii.getAlgorithm().setIsland(nsgaiii);
 
         // * 2. Set the neighborhood; 
@@ -125,7 +187,7 @@ public class DEAConfiguration implements AlgorithmConfiguration {
         builder.addIsland(moeadstm);
         builder.addIsland(nsgaiii);
         DEA dea = builder.build();
-        dea.setName("NSGAIII+MOEADSTM");
+        dea.setName("DEA");
         return dea;
 
     }

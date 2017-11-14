@@ -19,7 +19,12 @@ package org.uma.jmetal.algorithm.multiobjective.dea;
 import java.util.ArrayList;
 import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.IslandAlgorithm;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CyclicBarrier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.uma.jmetal.algorithm.multiobjective.dea.islandAlgorithms.MOEADDIsland;
 import org.uma.jmetal.solution.Solution;
 
 /**
@@ -27,24 +32,54 @@ import org.uma.jmetal.solution.Solution;
  * responsible for handling concurrency.
  *
  * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
+ * @param <S>
  */
 public class Island<S extends Solution<?>> implements Runnable {
 
-    // the thread of this island
-    private Thread thread;
     // the thread name
     private String threadName;
     // the buffer of Solutions received from other islands
     private final ConcurrentLinkedQueue<S> buffer;
+
+    private final int bufferLimit;
     // the list of neighbor to send information to
     private final List<Island> neighbors;
     // the algorithm to be executed by the island
     private final IslandAlgorithm algorithm;
 
-    public Island(IslandAlgorithm algorithm) {
+    private boolean acceptingMigrants = true;
+
+    private CyclicBarrier barrier = null;
+
+    public Island(IslandAlgorithm algorithm, int bufferLimit) {
         this.algorithm = algorithm;
         this.buffer = new ConcurrentLinkedQueue<>();
         this.neighbors = new ArrayList<>();
+        this.bufferLimit = bufferLimit;
+    }
+
+    public void setBarrier(CyclicBarrier barrier) {
+        this.barrier = barrier;
+    }
+
+    public void await() {
+        if (barrier != null) {
+            try {
+//                JMetalLogger.logger.log(Level.INFO, "island waiting: {0}", barrier.getNumberWaiting());
+                int index = barrier.await();
+//                JMetalLogger.logger.log(Level.INFO, "island executing: {0}", index);
+            } catch (InterruptedException | BrokenBarrierException ex) {
+                Logger.getLogger(MOEADDIsland.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public boolean isAcceptingMigrants() {
+        return acceptingMigrants;
+    }
+
+    public void setAcceptingMigrants(boolean acceptingMigrants) {
+        this.acceptingMigrants = acceptingMigrants;
     }
 
     public String getThreadName() {
@@ -69,7 +104,7 @@ public class Island<S extends Solution<?>> implements Runnable {
     public List<S> getMigrantQueue() {
         List<S> list = new ArrayList<>();
         S aux = getNextMigrant();
-        while (aux != null) {
+        for (int i = 0; i < bufferLimit && aux != null; ++i) {
             list.add(aux);
             aux = getNextMigrant();
         }
@@ -83,7 +118,13 @@ public class Island<S extends Solution<?>> implements Runnable {
      * @param migrant solution from other island
      */
     public void migrateSolution(S migrant) {
-        buffer.offer((S) migrant.copy());
+        if (isAcceptingMigrants()) {
+            buffer.offer((S) migrant.copy());
+            if (buffer.size() > bufferLimit) { // if the queueLimit is exceeded
+                buffer.poll();
+            }
+        }
+//        else { JMetalLogger.logger.log(Level.WARNING, "buffer size: {0}", buffer.size()); }
     }
 
     /**
@@ -97,6 +138,7 @@ public class Island<S extends Solution<?>> implements Runnable {
                 neighbor.migrateSolution(s);
             });
         });
+//        JMetalLogger.logger.log(Level.WARNING, "buffer size: {0}", neighbors.get(0).buffer.size());         
     }
 
     public void addNeighbor(Island neighbor) {

@@ -252,9 +252,11 @@ public class ParameterizedRunner<Result> extends ExecuteAlgorithms<Solution<?>, 
         // do not print info
         JMetalLogger.logger.setLevel(Level.WARNING);
         
-        if (args.length != 5) {
+        // JMetalLogger.logger.setLevel(Level.ALL);
+                              
+        if (args.length != 6) {
             throw new JMetalException("Needed arguments: "
-                    + "experimentBaseDirectory algorithm problem m id");
+                    + "experimentBaseDirectory algorithm problem m id seed");
         }
 
         int i = 0;
@@ -263,8 +265,9 @@ public class ParameterizedRunner<Result> extends ExecuteAlgorithms<Solution<?>, 
         String problem = args[i++];
         int m = Integer.parseInt(args[i++]);
         int id = Integer.parseInt(args[i++]);
+        int seed = Integer.parseInt(args[i++]);
 
-        JMetalRandom.getInstance().setSeed(id);
+        JMetalRandom.getInstance().setSeed(seed);
 
         List<ExperimentProblem<DoubleSolution>> problemList = getProblemList(problem, m);
         int generations = getGenerationsNumber(problem, m);

@@ -54,7 +54,7 @@ public class COMOEADSTM1<S extends Solution<?>> extends MOEADSTM1 implements Coo
             evaluations++;
 
             updateIdealPoint(child);
-            updateNadirPoint((S) child);
+            updateNadirPoint(child);
             updateNeighborhood(child, subProblemId, neighborType);
 
             offspringPopulation.add(child);
@@ -63,13 +63,6 @@ public class COMOEADSTM1<S extends Solution<?>> extends MOEADSTM1 implements Coo
         return offspringPopulation;
     } // update the current nadir point
 
-    protected void updateNadirPoint(S individual) {
-        for (int i = 0; i < problem.getNumberOfObjectives(); i++) {
-            if (individual.getObjective(i) > nadirPoint[i]) {
-                nadirPoint[i] = individual.getObjective(i);
-            }
-        }
-    }
 
     @Override
     public void updatePopulation(List<DoubleSolution> offspringPopulation) {

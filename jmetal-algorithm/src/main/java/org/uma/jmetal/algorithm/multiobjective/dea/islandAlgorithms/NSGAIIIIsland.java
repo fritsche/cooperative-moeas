@@ -23,14 +23,10 @@ import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIII;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
 
-/**
- *
- * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
- */
 public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements IslandAlgorithm<S> {
 
     private Island island;
-    private int migrationFrequency;
+    private final int migrationFrequency;
     private List<S> offspringPopulation;
     private List<S> matingPopulation;
 
@@ -54,7 +50,7 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
     public void replacementPolicy() {
         List<S> migrants = island.getMigrantQueue();
         JMetalLogger.logger.log(Level.INFO, "received migrants: {0}", migrants.size());
-        setPopulation(replacement(getPopulation(), migrants));
+        offspringPopulation.addAll(migrants);
     }
 
     @Override
@@ -67,16 +63,15 @@ public class NSGAIIIIsland<S extends Solution<?>> extends NSGAIII<S> implements 
             matingPopulation = selection(getPopulation());
             offspringPopulation = reproduction(matingPopulation);
             offspringPopulation = evaluatePopulation(offspringPopulation);
-            setPopulation(replacement(getPopulation(), offspringPopulation));
-
             if (iterations % migrationFrequency == 0) {
-                // send solutions
-                island.sendSolutions(selectionPolicy());
-                // receive solutions
+                island.sendSolutions(selectionPolicy());                
+                island.await();
                 replacementPolicy();
             }
-
+            setPopulation(replacement(getPopulation(), offspringPopulation));
             updateProgress();
         }
+        
+        island.setAcceptingMigrants(false);
     }
 }

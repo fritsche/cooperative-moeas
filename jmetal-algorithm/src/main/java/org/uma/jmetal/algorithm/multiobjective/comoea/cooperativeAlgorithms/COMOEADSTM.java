@@ -53,22 +53,13 @@ public class COMOEADSTM<S extends Solution<?>> extends MOEADSTM implements Coope
             evaluations++;
 
             updateIdealPoint(child);
-            updateNadirPoint((S) child);
+            updateNadirPoint(child);
             updateNeighborhood(child, subProblemId, neighborType);
 
             offspringPopulation.add(child);
         }
 
         return offspringPopulation;
-    }
-
-    // update the current nadir point
-    protected void updateNadirPoint(S individual) {
-        for (int i = 0; i < problem.getNumberOfObjectives(); i++) {
-            if (individual.getObjective(i) > nadirPoint[i]) {
-                nadirPoint[i] = individual.getObjective(i);
-            }
-        }
     }
 
     @Override

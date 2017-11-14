@@ -19,6 +19,7 @@ package org.uma.jmetal.experiment.methodology;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.APPROACH;
 import org.uma.jmetal.experiment.methodology.COMOEAConfiguration.SUB_ALGORITHM;
+import org.uma.jmetal.algorithm.multiobjective.dea.DEA.VERSION;
 
 /**
  *
@@ -28,8 +29,12 @@ public class AlgorithmConfigurationFactory {
 
     public static AlgorithmConfiguration getAlgorithmConfiguration(String algorithm) {
         switch (algorithm) {
+            case "NSGAII":
+                return new NSGAIIConfiguration();
             case "NSGAIII":
                 return new NSGAIIIConfiguration();
+            case "Yuan":
+                return new YuanConfiguration();
             case "MOEADD":
                 return new MOEADDConfiguration();
             case "MOEADSTM":
@@ -46,6 +51,12 @@ public class AlgorithmConfigurationFactory {
                 return new COMOEAConfigurationV2(APPROACH.SPLIT_POPULATION, SUB_ALGORITHM.COMOEADSTM1, SUB_ALGORITHM.CONSGAIII);
             case "dEAv2": // fixed missing call to Solution.copy()
                 return new DEAConfigurationV2();
+            case "AsyncHeDi": // asynchrohous dEA (NSGA-III, MOEA/DD)
+                return new HeDiConfiguration(VERSION.ASYNC);
+            case "SyncHeDi": // asynchrohous dEA (NSGA-III, MOEA/DD)
+                return new HeDiConfiguration(VERSION.SYNC);
+            case "BroadcastHeDi": // asynchronous dea (NSGAIII, MOEADD, NSGAII) SPLIT_ITERATIONS
+                return new BroadcastHeDiConfiguration();
             default:
                 throw new JMetalException("There is no configurations for " + algorithm + " algorithm");
         }

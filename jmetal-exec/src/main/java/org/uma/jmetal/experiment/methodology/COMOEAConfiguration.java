@@ -46,7 +46,7 @@ import org.uma.jmetal.solution.Solution;
 public class COMOEAConfiguration implements AlgorithmConfiguration<Solution<?>> {
 
     public enum SUB_ALGORITHM {
-        CONSGAIII, COMOEADSTM, COMOEADSTM1
+        CONSGAIII, COMOEADSTM, COMOEADSTM1, COMOEADD
     };
 
     public enum APPROACH {

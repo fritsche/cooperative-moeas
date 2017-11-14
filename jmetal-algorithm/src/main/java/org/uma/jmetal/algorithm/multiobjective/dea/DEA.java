@@ -19,33 +19,43 @@ package org.uma.jmetal.algorithm.multiobjective.dea;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.solution.Solution;
-import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.SolutionListUtils;
 
-/**
- *
- * @author Gian Fritsche <gmfritsche@inf.ufpr.br>
- */
 public class DEA<S extends Solution<?>> implements Algorithm<List<S>> {
 
     private String name;
     private final List<Island> islands;
 
+    public enum VERSION {
+        SYNC, ASYNC
+    };
+
+    private VERSION version = VERSION.SYNC;
+
     public DEA(DEABuilder builder) {
         islands = builder.getIslands();
+        this.version = builder.getVersion();
     }
 
     @Override
     public void run() {
 
         List<Thread> threads = new ArrayList<>();
-
+        
+        final CyclicBarrier barrier;
+        if (version == VERSION.SYNC) {
+            barrier = new CyclicBarrier(islands.size());
+        } else { // ASYNC
+            barrier = null;
+        }
         // create the threads
         islands.forEach((island) -> {
+            island.setBarrier(barrier);
             threads.add(new Thread(island));
         });
 

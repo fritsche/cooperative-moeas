@@ -20,8 +20,9 @@ import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.moead.AbstractMOEAD;
 import org.uma.jmetal.algorithm.multiobjective.moead.MOEADBuilder;
+import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
-import org.uma.jmetal.operator.impl.crossover.DifferentialEvolutionCrossover;
+import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
 import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
@@ -35,14 +36,12 @@ public class MOEADDConfiguration implements AlgorithmConfiguration<DoubleSolutio
     @Override
     public Algorithm cofigure(Problem<DoubleSolution> problem, int popSize, int generations) {
 
-        /* CHECK THE MOEADD CONFIGURATION 
+        
         MutationOperator<DoubleSolution> mutation;
-        DifferentialEvolutionCrossover crossover;
         Algorithm<List<DoubleSolution>> algorithm;
-        double cr = 1.0;
-        double f = 0.5;
-
-        crossover = new DifferentialEvolutionCrossover(cr, f, "rand/1/bin");
+        double crossoverProbability = 1.0;
+        double crossoverDistributionIndex = 30.0;
+        CrossoverOperator<DoubleSolution> crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
 
         double mutationProbability = 1.0 / problem.getNumberOfVariables();
         double mutationDistributionIndex = 20.0;
@@ -55,13 +54,11 @@ public class MOEADDConfiguration implements AlgorithmConfiguration<DoubleSolutio
                 .setPopulationSize(popSize)
                 .setResultPopulationSize(popSize)
                 .setNeighborhoodSelectionProbability(0.9)
-                .setMaximumNumberOfReplacedSolutions(2)
+                .setMaximumNumberOfReplacedSolutions(1)
                 .setNeighborSize(20)
-                .setFunctionType(AbstractMOEAD.FunctionType.TCHE)
+                .setFunctionType(AbstractMOEAD.FunctionType.PBI)
                 .setDataDirectory("MOEAD_Weights")
                 .build();
-        */
-        return null;
     }
 
 }
