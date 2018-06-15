@@ -1,4 +1,4 @@
-# cooperative-moes
+# cooperative-moeas
 
 ## WARNING: This project was discontinued
 
